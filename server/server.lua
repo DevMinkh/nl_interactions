@@ -1,8 +1,7 @@
-ESX = nil
 ESX = exports["es_extended"]:getSharedObject()
 
 AddEventHandler('onResourceStart', function(resourceName)
-	if (GetResourceState('bixbi_core') ~= 'started' ) then
+    if (GetResourceState('bixbi_core') ~= 'started' ) then
         print('Bixbi_Target - ERROR: Bixbi_Core hasn\'t been found! This could cause errors!')
     end
 end)

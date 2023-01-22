@@ -1,0 +1,92 @@
+@import url('https://fonts.cdnfonts.com/css/akrobat');
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	border: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	-webkit-user-drag: none;
+  	-khtml-user-drag: none;
+  	-moz-user-drag: none;
+  	-o-user-drag: none;
+}
+
+#container {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background: linear-gradient(93deg, rgba(0, 0, 0, 0.848), rgba(78, 78, 78, 0.848));
+}
+
+#blood {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	top: 0.4259vh;
+	overflow: visible;
+}
+
+#button {
+	position: absolute;
+	width: 24.5833vw;
+	height: 13.5185vh;
+	left: 38.6083vw;
+	top: 60.463vh;
+	overflow: visible;
+	transition: .45s;
+	opacity: .9;
+}
+
+#button:hover {
+	opacity: 1.0;
+	transform: scale(0.95);
+}
+
+#buttonbackground_j {
+	fill: url(#buttonbackground_j);
+}
+
+.buttonbackground_j {
+	position: absolute;
+	overflow: visible;
+	width: 22.5833vw;
+	height: 13.5185vh;
+	left: 0vw;
+	top: 0vh;
+}
+
+#callforhelp {
+	left: 2.8542vw;
+	top: 3.40815vh;
+	position: absolute;
+	overflow: visible;
+	width: 14.9479vw;
+	white-space: nowrap;
+	text-align: center;
+	font-family: Akrobat;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 2.6563vw;
+	color: rgba(255,255,255,1);
+}
+
+#timeleft {
+	left: 44.3229vw;
+	top: 42.3889vh;
+	position: absolute;
+	overflow: visible;
+	width: 11.4063vw;
+	white-space: nowrap;
+	text-align: center;
+	font-family: Akrobat;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 3.6458vw;
+	color: rgba(255,255,255,1);
+}

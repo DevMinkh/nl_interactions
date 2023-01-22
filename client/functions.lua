@@ -523,8 +523,9 @@ function text(text)
 end
 
 function notify(type, msg, duration, title)
-	if (duration == nil) then duration = 5000 end
-	lib.notify({
+	if (duration == nil) then duration = 1000 end
+	if (title == nil) then title = '' end
+	lib.defaultNotify({
 		title = title,
 		description = msg,
 		position = 'top',

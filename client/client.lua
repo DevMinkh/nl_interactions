@@ -724,28 +724,23 @@ AddEventHandler('nl_interactions:analysePlayerEMS', function (data, player)
                     PulseState(PlayerPedClose, locale(harm_arm_l_upper))
                 end
                 if Bone == 61163 then
-                    -- [[CHANGE THIS]] --
-                    PulseState(PlayerPedClose, 'Verletzung des linken Unterarms')
+                    PulseState(PlayerPedClose, locale(harm_arm_l_lower))
                 end
                 if Bone == 18905 then
-                    -- [[CHANGE THIS]] --
-                    PulseState(PlayerPedClose, 'Verletzung der linken Hand')
+                    PulseState(PlayerPedClose, locale(harm_hand_l))
                 end
                 if Bone == 10706 then
-                    -- [[CHANGE THIS]] --
-                    PulseState(PlayerPedClose, 'Verletzung des rechten Schlüsselbeins')
+                    PulseState(PlayerPedClose, locale(harm_arm_r_shoulder))
                 end
                 if Bone == 40269 then
-                    -- [[CHANGE THIS]] --
-                    PulseState(PlayerPedClose, 'Oberarmverletzung rechts')
+                    PulseState(PlayerPedClose, locale(harm_arm_r_upper))
                 end
                 if Bone == 28252 then
-                    -- [[CHANGE THIS]] --
-                    PulseState(PlayerPedClose, 'Verletzung des rechten Unterarms')
+                    PulseState(PlayerPedClose, locale(harm_arm_r_lower))
                 end
                 if Bone == 57005 then
                     -- [[CHANGE THIS]] --
-                    PulseState(PlayerPedClose, 'Verletzung der rechten Hand')
+                    PulseState(PlayerPedClose, locale(harm_hand_r))
                 end
                 if Bone == 31086 then
                     -- head

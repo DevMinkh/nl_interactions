@@ -13,6 +13,7 @@ license      'LGPL-3.0-or-later'
 repository   ''
 description  'NativeLife - RP | Interactions'
 
+--[[ File Management ]]--
 shared_scripts {
 	'@es_extended/imports.lua',
 	'@ox_lib/init.lua',

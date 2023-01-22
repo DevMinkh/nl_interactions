@@ -224,7 +224,7 @@ RegisterNUICallback("button", function(data)
 	
 	TriggerServerEvent('roadphone:sendDispatch', GetPlayerServerId(PlayerId()), message, jobreceived, position, anonym)
 	]]--
-    TriggerServerEvent('nl_interactions:SendDistressEms')
+    TriggerServerEvent('nl_interactions:sendDistressEms')
 
     SetNuiFocus(false, false)
 end)
@@ -645,12 +645,12 @@ LoadAnim = function(dict)
 end
 
 -- [[CHANGE THIS]] --
-RegisterNetEvent('nl_interactions:SendDistressEms')
-AddEventHandler('nl_interactions:SendDistressEms', function(Coords)
+RegisterNetEvent('nl_interactions:sendDistressEms')
+AddEventHandler('nl_interactions:sendDistressEms', function(Coords)
     if Coords ~= nil then
         local PhoneNumber = ""
 
-        ESX.TriggerServerCallback('nl_interactions_ems:getPhoneNumberBySource',function(number)
+        ESX.TriggerServerCallback('nl_interactions:getPhoneNumberBySource',function(number)
             if PhoneNumber ~= nil then
                 PhoneNumber = number
             end
@@ -664,9 +664,9 @@ AddEventHandler('nl_interactions:SendDistressEms', function(Coords)
             local StreetName = "Inconnu"
         end
         if PhoneNumber ~= nil then
-            TriggerServerEvent('nl_interactions_emsmdt:newCall', 'Coma' , 'Une personne est tombé dans le coma.', StreetName, Coords, PhoneNumber)
+            TriggerServerEvent('nl_interactions:newCall', 'Coma' , 'Une personne est tombé dans le coma.', StreetName, Coords, PhoneNumber)
         else
-            TriggerServerEvent('nl_interactions_emsmdt:newCall', 'Coma' , 'Une personne est tombé dans le coma.', StreetName, Coords, 000000)
+            TriggerServerEvent('nl_interactions:newCall', 'Coma' , 'Une personne est tombé dans le coma.', StreetName, Coords, 000000)
         end
 
     end
@@ -697,7 +697,7 @@ AddEventHandler('nl_interactions:healemsjob', function(healType, quiet)
         end
 end)
 
-AddEventHandler('nl_interactions:AnalysePlayerEMS', function (data, player)
+AddEventHandler('nl_interactions:analysePlayerEMS', function (data, player)
 
         local PlayerCoords = GetEntityCoords(cache.ped) -- Récupère les coordonnées du joueur
         local closePlayer = lib.getClosestPlayer(PlayerCoords, 2, false) -- Récupère le joueur le plus proche
@@ -842,7 +842,7 @@ AddEventHandler('nl_interactions:AnalysePlayerEMS', function (data, player)
         end
 end)
 
-AddEventHandler('nl_interactions:AnalysePulsePlayerEMS', function (data, player)
+AddEventHandler('nl_interactions:analysePulsePlayerEMS', function (data, player)
 
         local PlayerCoords = GetEntityCoords(cache.ped)
         local closePlayer = lib.getClosestPlayer(PlayerCoords, 2, false)
@@ -968,7 +968,7 @@ AddEventHandler('nl_interactions:AnalysePulsePlayerEMS', function (data, player)
 end)
 
 
-AddEventHandler('nl_interactions:ReanimationPlayerEMS', function (data, player)
+AddEventHandler('nl_interactions:reanimationPlayerEMS', function (data, player)
 
         local PlayerCoords = GetEntityCoords(cache.ped)
         local closePlayer = lib.getClosestPlayer(PlayerCoords, 2, false)
@@ -979,7 +979,7 @@ AddEventHandler('nl_interactions:ReanimationPlayerEMS', function (data, player)
         end
 end)
 
-AddEventHandler('nl_interactions:BlessureLourdePlayerEMS', function (data, player)
+AddEventHandler('nl_interactions:blessureLourdePlayerEMS', function (data, player)
 
         local ped = GetEntityCoords(cache.ped)
         local closestPlayer = lib.getClosestPlayer(ped, 2, false)
@@ -989,7 +989,7 @@ AddEventHandler('nl_interactions:BlessureLourdePlayerEMS', function (data, playe
         end
 end)
 
-AddEventHandler('nl_interactions:BlessureLegerePlayerEMS', function (data)
+AddEventHandler('nl_interactions:blessureLegerePlayerEMS', function (data)
     local ped = GetEntityCoords(cache.ped)
     local closestPlayer = lib.getClosestPlayer(ped, 2, false)
     if closestPlayer ~= nil then
@@ -1105,8 +1105,8 @@ exports['qtarget']:Player({
 })
 ]]--
 
-RegisterNetEvent('nl_interactions_emsmdt:CreateWheelChair')
-AddEventHandler('nl_interactions_emsmdt:CreateWheelChair', function()
+RegisterNetEvent('nl_interactions:createWheelChair')
+AddEventHandler('nl_interactions:createWheelChair', function()
 
         local MyPed = PlayerPedId()
         local ModelHash = 'iak_wheelchair'
@@ -1132,7 +1132,7 @@ AddEventHandler('nl_interactions_emsmdt:CreateWheelChair', function()
         end)
 end)
 
-AddEventHandler('nl_interactions_ems:GetWheelChair', function(data)
+AddEventHandler('nl_interactions_ems:getWheelChair', function(data)
     if DoesEntityExist(data.entity) then
         ESX.Game.DeleteVehicle(data.entity)
     end
@@ -1140,8 +1140,8 @@ end)
 
 local optionsWheelChair = {
     {
-        name = 'nl_interactions_ems_GetWheelChair',
-        event = 'nl_interactions_ems:GetWheelChair',
+        name = 'getWheelChair',
+        event = 'nl_interactions:getWheelChair',
         icon = 'fa-solid fa-road',
         label = 'Ranger le fauteil',
         canInteract = function(entity, distance, coords, name, bone)

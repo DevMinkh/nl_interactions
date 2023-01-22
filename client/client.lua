@@ -718,12 +718,10 @@ AddEventHandler('nl_interactions:analysePlayerEMS', function (data, player)
             if Hit then
                 -- arms
                 if Bone == 64729 then
-                    -- [[CHANGE THIS]] --
-                    PulseState(PlayerPedClose, 'Verletzung des linken Schlüsselbeins')
+                    PulseState(PlayerPedClose, locale(harm_arm_l_shoulder))
                 end
                 if Bone == 45509 then
-                    -- [[CHANGE THIS]] --
-                    PulseState(PlayerPedClose, 'Oberarmverletzung links')
+                    PulseState(PlayerPedClose, locale(harm_arm_l_upper))
                 end
                 if Bone == 61163 then
                     -- [[CHANGE THIS]] --

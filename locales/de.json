@@ -2,8 +2,13 @@
 	"account_management": "Kontoverwaltung",
 	"account_not": "Nicht genügend Geld",
 	"ammount": "Betrag",
-  "grand_theft_auto": "vol de voiture",
-  "male": "homme",
-  "female": "femme",
-  "suspect_sex": "le suspect est %s",
+	
+	"harm_arm_l_shoulder": "Verletzung des linken Schlüsselbeins",
+	"harm_arm_r_shoulder": "Verletzung des rechten Schlüsselbeins",
+	"harm_arm_l_upper": "Oberarmverletzung links",
+	"harm_arm_r_upper": "Oberarmverletzung rechts",
+	"harm_arm_l_lower": "Verletzung des linken Unterarms",
+	"harm_arm_r_lower": "Verletzung des rechten Unterarms",
+	"harm_hand_l": "Verletzung der linken Hand",
+	"harm_hand_r": "Verletzung der rechten Hand",
 }

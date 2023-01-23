@@ -103,17 +103,17 @@ exports['qtarget']:Vehicle({
             job = "fnl"
         },
     --[[
-    {
-    event = "nl_interactions:lockpick",
-    icon = "fas fa-unlock",
-    item = 'lockpick',
-    label = 'Fahrzeug knacken',
-    canInteract = function(entity)
-    if (ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'mechanic' or ESX.PlayerData.job.name == 'fnl' or ESX.PlayerData.job.name == 'bpc') then return false end
-    return true
-    end,
-    },
-    ]]--
+        {
+            event = "nl_interactions:lockpick",
+            icon = "fas fa-unlock",
+            item = 'lockpick',
+            label = 'Fahrzeug knacken',
+            canInteract = function(entity)
+            if (ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'mechanic' or ESX.PlayerData.job.name == 'fnl' or ESX.PlayerData.job.name == 'bpc') then return false end
+                return true
+            end,
+        },
+        ]]--
     },
     distance = 2.0
 })
@@ -280,6 +280,106 @@ exports['qtarget']:Player({
             -- [[ CHANGE ]]--
             --TriggerEvent('TakeHostage:Start', GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
             end
+        },
+		--[[ EMS actions ]]--
+		{
+            icon = 'fas fa-diagnoses',
+            label = 'Analysieren Sie den Körper des Patienten',
+            job = {['ambulance'] = 0},
+            canInteract = function(entity)
+
+                if IsPedAPlayer(entity) and IsPedDeadOrDying(entity) then
+                    return true
+                end
+
+            end,
+            event = "nl_interactions:AnalysePlayerEMS",
+        },
+        {
+            icon = 'fas fa-diagnoses',
+            label = 'Analysieren Sie Patienten und Verletzungen',
+            job = {['ambulance'] = 0},
+            canInteract = function(entity)
+
+                if IsPedAPlayer(entity) and IsPedDeadOrDying(entity) == false then
+                    return true
+                end
+
+            end,
+            event = "nl_interactions:analysePulsePlayerEMS",
+        },
+        {
+            icon = 'fas fa-hand-holding-medical',
+            label = 'Führen Sie eine Wiederbelebung durch',
+            job = {['ambulance'] = 0},
+            canInteract = function(entity)
+
+                if IsPedAPlayer(entity) and IsPedDeadOrDying(entity, true) then
+
+
+                    local ItemNeeded = exports.ox_inventory:Search('count', 'reakit')
+
+                    if ItemNeeded > 0 then
+                        return true
+                    end
+
+                end
+            end,
+            event = "nl_interactions:reanimationPlayerEMS",
+        },
+        {
+            icon = 'fas fa-medkit',
+            label = 'Führe schwere Heilung durch',
+            job = {['ambulance'] = 0},
+            canInteract = function(entity)
+
+                if IsPedAPlayer(entity) then
+
+
+                    local ItemNeeded = exports.ox_inventory:Search('count', 'medkit')
+                    local HealthPlayer = GetEntityHealth(entity)
+
+                    -- print(HealthPlayer, GetEntityMaxHealth(entity))
+                    
+                    if IsPedMale(entity) then
+                        if HealthPlayer < 150 and HealthPlayer > 101 and ItemNeeded > 0 then
+                            return true
+                        end
+                    else 
+                        if HealthPlayer < 50 and HealthPlayer > 1 and ItemNeeded > 0 then
+                            return true
+                        end
+                    end
+                end
+            end,
+            event = "nl_interactions:blessureLourdePlayerEMS",
+        },
+        {
+            icon = 'fas fa-pump-medical',
+            label = 'Leichte Pflege durchführen',
+            job = {['ambulance'] = 0},
+            canInteract = function(entity)
+
+                if IsPedAPlayer(entity) then
+
+
+                    local ItemNeeded = exports.ox_inventory:Search('count', 'bandageems')
+                    local HealthPlayer = GetEntityHealth(entity)
+                    
+
+                    if IsPedMale(entity) then
+                        if HealthPlayer < 201 and HealthPlayer >= 150 and ItemNeeded > 0 then
+                            return true
+                        end
+                    else 
+                        if HealthPlayer < 101 and HealthPlayer >= 50 and ItemNeeded > 0 then
+                            return true
+                        end
+                    end
+
+                end
+            end,
+            event = "nl_interactions:blessureLegerePlayerEMS",
         },
     },
     distance = 2.0

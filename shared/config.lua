@@ -1,8 +1,13 @@
-globalState.timer = 12
+globalState = {}
+
+globalState.timer = 1 -- Minutes to autospawn after coma. Default is 12
 globalState.respawnCoords = vector3(-677.1683, 310.5062, 83.0840) -- where the player will spawn after timer is at 0
 globalState.respawnHeading = 1.0148 -- heading for respawncoords
 
 config = {}
+
+--[[ basic settings ]]--
+config.useRenzuHud = true -- if u use renzu_hud and renzu_hygene (reset status at respawn)
 
 config.jobName = 'ambulance'
 config.bleedoutTimer = 30
@@ -21,7 +26,7 @@ config.blipsHospital = {
 }
 	
 config.shopPharmacieCoords = vector4(-676.6450, 334.7412, 82.1, 175.4911)
-config.pedModelPharma = 's_f_y_scrubs_01',
+config.pedModelPharma = 's_f_y_scrubs_01'
 	
 config.modelLitsBig = {'shmann_ehos_bed05'}
 config.modelLits = {'shmann_ehos_couch01', 'shmann_ehos_couch02'}
@@ -64,4 +69,8 @@ config.weaponList = {
 config.weapKo = {
     poing = joaat('WEAPON_UNARMED'),
     tonfa = joaat('WEAPON_NIGHTSTICK')
+}
+
+config.illegalTaskBlacklist = {
+
 }

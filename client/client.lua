@@ -1,14 +1,24 @@
--- Load the locale module
+--[[ Loading the ox_lib locales ]]--
 lib.locale()
 
--- Load ESX
+--[[ Define locals ]]--
+local IsDead = false
+local StatusReload = false
+local IsBleeding = false
+local secondsRemaining = config.bleedoutTimer
+
+local TimerDeath = 0
+local TimerDeathMax = globalState.timer * 1000 * 60
+local TimerAddedPerTick = 1000
+local ems = AddBlipForCoord(config.blipsHospital.position.x, config.blipsHospital.position.y, config.blipsHospital.position.z)
+
+--[[ Load ESX ]]--
 ESX = exports['es_extended']:getSharedObject()
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
     while (ESX == nil) do Citizen.Wait(100) end
     PlayerData = xPlayer
-    FreezeEntityPosition(PlayerPedId(), false)
 end)
 
 AddEventHandler('esx:onPlayerSpawn', function()
@@ -17,26 +27,15 @@ AddEventHandler('esx:onPlayerSpawn', function()
         SetEntityMaxHealth(playerPed, 200)
         SetEntityHealth(playerPed, 200)
     end
+	FreezeEntityPosition(PlayerPedId(), false)
 end)
-
--- Define locals
-local IsDead = false
-local StatusReload = false
-local IsBleeding = false
-local secondsRemaining = config.bleedoutTimer
-
-local TimerDeath = 0
-local TimerDeathMax = 720000
-local TimerAddedPerTick = 1000
 
 Citizen.CreateThread(function()
     while ESX.GetPlayerData().job == nil do
         Citizen.Wait(10)
     end
     if ESX.IsPlayerLoaded() then
-
         ESX.PlayerData = ESX.GetPlayerData()
-
     end
 
     Wait(1000)
@@ -49,8 +48,6 @@ Citizen.CreateThread(function()
         end
     end)
 
-    local ems = AddBlipForCoord(Config.BlipsHospital.position.x, Config.BlipsHospital.position.y, Config.BlipsHospital.position.z)
-
     SetBlipSprite(ems, config.blipsHospital.sprite)
     SetBlipDisplay(ems, config.blipsHospital.display)
     SetBlipScale(ems, config.blipsHospital.scale)
@@ -59,7 +56,6 @@ Citizen.CreateThread(function()
     BeginTextCommandSetBlipName("STRING")
     AddTextComponentString(config.blipsHospital.title)
     EndTextCommandSetBlipName(ems)
-
     RequestModel(config.pedModelPharma)
 
     while (not HasModelLoaded(config.pedModelPharma)) do
@@ -72,7 +68,7 @@ Citizen.CreateThread(function()
     FreezeEntityPosition(PharmaShop, true)
 end)
 
--- Death screen
+--[[ Death screen ]]--
 function SetDisplay(bool)
     SendNUIMessage({
         type = "show",
@@ -81,24 +77,24 @@ function SetDisplay(bool)
     })
 
     SendNUIMessage({action = 'starttimer', value = globalState.timer})
-
     SendNUIMessage({action = 'showbutton'})
-
     SetNuiFocus(bool, bool)
 end
 
--- On player death function
+-- [[ Overwrite esx on player death functino ]]--
 AddEventHandler('esx:onPlayerDeath', function(data)
     if not IsBleeding then
         IsBleeding = true
         if GetEntityHealth(PlayerPedId()) <= 105 then
             local WeaponKiller = GetPedCauseOfDeath(PlayerPedId())
             local WeapKoIs = false
-            for k,v in pairs(Config.WeapKo) do
+			--[[
+            for k,v in pairs(config.ceapKo) do
                 if WeaponKiller == joaat(v) then
                     WeapKoIs = true
                 end
             end
+			]]--
 
             if WeapKoIs and IsBleeding then
                 IsBleeding = true
@@ -184,8 +180,17 @@ AddEventHandler('playerSpawned', function(spawn)
                 SetEntityHealth(ESX.PlayerData.ped, 0)
             else
                 if StatusReload then
-                    TriggerEvent("esx_status:set", "hunger", 500000)
-                    TriggerEvent("esx_status:set", "thirst", 500000)
+                    TriggerEvent("esx_status:set", "hunger", 1000000)
+                    TriggerEvent("esx_status:set", "thirst", 1000000)
+					if config.useRenzuHud == true then
+						TriggerEvent("esx_status:set", "stress",  200000)
+						TriggerEvent("esx_status:set", "energy", 1000000)
+						TriggerEvent("esx_status:set", "pee", 1000000)
+						TriggerEvent("esx_status:set", "poop", 1000000)
+						TriggerEvent("esx_status:set", "hygiene", 1000000)
+						
+						TriggerEvent("esx_status:set", "fever", 0)
+					end
                 end
                 SetDisplay(false)
                 StatusReload = false
@@ -195,7 +200,6 @@ AddEventHandler('playerSpawned', function(spawn)
                 end
 
                 TriggerServerEvent('nl_interactions:setDeathStatus', false)
-
 
                 local playerPed = PlayerPedId()
 
@@ -213,18 +217,7 @@ end)
 
 RegisterNUICallback("button", function(data)
     SendNUIMessage({action = 'hidebutton'})
-    -- [[CHANGE THIS]] --
-    --[[
-		local anonym = false
-		local coords = GetEntityCoords(PlayerPedId())
-		local position = {x = coords.x, y = coords.y, z = coords.z - 1}
-		local jobreceived = JOBNAME
-		local message = MESSAGE
-		
-		TriggerServerEvent('roadphone:sendDispatch', GetPlayerServerId(PlayerId()), message, jobreceived, position, anonym)
-	]]--
-    TriggerServerEvent('nl_interactions:sendDistressEms')
-
+    TriggerServerEvent('nl_interactions:sendDistress')
     SetNuiFocus(false, false)
 end)
 
@@ -233,18 +226,19 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
     ESX.PlayerData = xPlayer
 end)
 
-
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
     ESX.PlayerData.job = job
 end)
 
-RegisterNetEvent('nl_interactions:reviveems')
-AddEventHandler('nl_interactions:reviveems', function()
+--[[ Revive function ]]--
+RegisterNetEvent('nl_interactions:revive')
+AddEventHandler('nl_interactions:revive', function()
     local playerPed = PlayerPedId()
     local coords = GetEntityCoords(playerPed)
 
     TriggerServerEvent('nl_interactions:setDeathStatus', false)
+	TriggerEvent('esx:onPlayerSpawn')
 
     DoScreenFadeOut(800)
 
@@ -322,8 +316,8 @@ AddEventHandler('nl_interactions:ems_interaction_bed_client', function (data)
                     },
                 }
             }
-
-            exports.scully_emotemenu:Play(EmoteData, EmoteData.Variant)
+-- [[ CHANGE ]] --
+            --exports.scully_emotemenu:Play(EmoteData, EmoteData.Variant)
 			notify('warning', locale('leave_bed'), 8000, locale('bed'))
         else
 			notify('error', locale('try_again'), 8000, locale('bed'))
@@ -550,7 +544,6 @@ local OptionsInteractionEcho = {
     }
 }
 
-
 local OptionsInteractionOpeOne = {
     coords = vec3(-648.4824, 326.5388, 88.2),
     size = vec3(1, 2, 1),
@@ -593,7 +586,6 @@ local OptionsInteractionOpeTwo = {
     }
 }
 
-
 local OptionsInteractionOscuOne = {
     coords = vec3(-669.7316, 336.1655, 88.25),
     size = vec3(1, 2, 1),
@@ -632,8 +624,8 @@ LoadAnim = function(dict)
 end
 
 -- [[CHANGE THIS]] --
-RegisterNetEvent('nl_interactions:sendDistressEms')
-AddEventHandler('nl_interactions:sendDistressEms', function(Coords)
+RegisterNetEvent('nl_interactions:sendDistress')
+AddEventHandler('nl_interactions:sendDistress', function(Coords)
     if Coords ~= nil then
         local PhoneNumber = ""
 
@@ -651,13 +643,24 @@ AddEventHandler('nl_interactions:sendDistressEms', function(Coords)
             local StreetName = "Inconnu"
         end
         if PhoneNumber ~= nil then
--- [[ CHANGE ]] --
-			--notify('warning', locale('send_distress'), 8000, locale('coma'))
-            --TriggerServerEvent('nl_interactions:newCall', 'Coma' , 'Une personne est tombé dans le coma.', StreetName, Coords, PhoneNumber)
+		
+			local anonym = false
+			local coords = GetEntityCoords(PlayerPedId())
+			local position = {x = coords.x, y = coords.y, z = coords.z - 1}
+			local jobreceived = 'ambulance'
+			local message = locale('send_distress')
+			
+			notify('warning', locale('send_distress_done'), 8000, locale('coma'))
+			TriggerServerEvent('roadphone:sendDispatch', GetPlayerServerId(PlayerId()), message, jobreceived, position, anonym)
         else
--- [[ CHANGE ]] --
-			--notify('warning', locale('reason_of_harm') .. TypeKilledPlayer, 8000, locale('harm_check'))
-            --TriggerServerEvent('nl_interactions:newCall', 'Coma' , 'Une personne est tombé dans le coma.', StreetName, Coords, 000000)
+			local anonym = false
+			local coords = GetEntityCoords(PlayerPedId())
+			local position = {x = coords.x, y = coords.y, z = coords.z - 1}
+			local jobreceived = 'ambulance'
+			local message = locale('send_distress')
+			
+			TriggerServerEvent('roadphone:sendDispatch', GetPlayerServerId(PlayerId()), message, jobreceived, position, anonym)
+			notify('warning', locale('reason_of_harm') .. TypeKilledPlayer, 8000, locale('harm_check'))
         end
 
     end
@@ -935,7 +938,7 @@ AddEventHandler('nl_interactions:blessureLourdePlayerEMS', function (data, playe
         local closestPlayer = lib.getClosestPlayer(ped, 2, false)
 
         if closestPlayer ~= nil then
-            TriggerServerEvent('nl_interactions:healems', GetPlayerServerId(closestPlayer), 'big')
+            TriggerServerEvent('nl_interactions:heal', GetPlayerServerId(closestPlayer), 'big')
         end
 end)
 
@@ -943,117 +946,9 @@ AddEventHandler('nl_interactions:blessureLegerePlayerEMS', function (data)
     local ped = GetEntityCoords(cache.ped)
     local closestPlayer = lib.getClosestPlayer(ped, 2, false)
     if closestPlayer ~= nil then
-        TriggerServerEvent('nl_interactions:healems', GetPlayerServerId(closestPlayer), 'small')
+        TriggerServerEvent('nl_interactions:heal', GetPlayerServerId(closestPlayer), 'small')
     end
 end)
-
--- [[CHANGE THIS]] --
---[[
-exports['qtarget']:Player({
-    options = {
-        {
-            icon = 'fas fa-diagnoses',
-            label = 'Analysieren Sie den Körper des Patienten',
-            job = {['ambulance'] = 0},
-            canInteract = function(entity)
-
-                if IsPedAPlayer(entity) and IsPedDeadOrDying(entity) then
-                    return true
-                end
-
-            end,
-            event = "nl_interactions:AnalysePlayerEMS",
-        },
-        {
-            icon = 'fas fa-diagnoses',
-            label = 'Analysieren Sie Patienten und Verletzungen',
-            job = {['ambulance'] = 0},
-            canInteract = function(entity)
-
-                if IsPedAPlayer(entity) and IsPedDeadOrDying(entity) == false then
-                    return true
-                end
-
-            end,
-            event = "nl_interactions:AnalysePulsePlayerEMS",
-        },
-        {
-            icon = 'fas fa-hand-holding-medical',
-            label = 'Führen Sie eine Wiederbelebung durch',
-            -- job = {['ambulance'] = 0},
-            canInteract = function(entity)
-
-                if IsPedAPlayer(entity) and IsPedDeadOrDying(entity, true) then
-
-
-                    local ItemNeeded = exports.ox_inventory:Search('count', 'reakit')
-
-                    if ItemNeeded > 0 then
-                        return true
-                    end
-
-                end
-            end,
-            event = "nl_interactions:ReanimationPlayerEMS",
-        },
-        {
-            icon = 'fas fa-medkit',
-            label = 'Führe schwere Heilung durch',
-            -- job = {['ambulance'] = 0},
-            canInteract = function(entity)
-
-                if IsPedAPlayer(entity) then
-
-
-                    local ItemNeeded = exports.ox_inventory:Search('count', 'medkit')
-                    local HealthPlayer = GetEntityHealth(entity)
-
-                    -- print(HealthPlayer, GetEntityMaxHealth(entity))
-                    
-                    if IsPedMale(entity) then
-                        if HealthPlayer < 150 and HealthPlayer > 101 and ItemNeeded > 0 then
-                            return true
-                        end
-                    else 
-                        if HealthPlayer < 50 and HealthPlayer > 1 and ItemNeeded > 0 then
-                            return true
-                        end
-                    end
-                end
-            end,
-            event = "nl_interactions:BlessureLourdePlayerEMS",
-        },
-        {
-            icon = 'fas fa-pump-medical',
-            label = 'Leichte Pflege durchführen',
-            -- job = {['ambulance'] = 0},
-            canInteract = function(entity)
-
-                if IsPedAPlayer(entity) then
-
-
-                    local ItemNeeded = exports.ox_inventory:Search('count', 'bandageems')
-                    local HealthPlayer = GetEntityHealth(entity)
-                    
-
-                    if IsPedMale(entity) then
-                        if HealthPlayer < 201 and HealthPlayer >= 150 and ItemNeeded > 0 then
-                            return true
-                        end
-                    else 
-                        if HealthPlayer < 101 and HealthPlayer >= 50 and ItemNeeded > 0 then
-                            return true
-                        end
-                    end
-
-                end
-            end,
-            event = "nl_interactions:BlessureLegerePlayerEMS",
-        },
-    },
-    distance = 2.0
-})
-]]--
 
 RegisterNetEvent('nl_interactions:createWheelChair')
 AddEventHandler('nl_interactions:createWheelChair', function()

@@ -1,11 +1,15 @@
 {
-	"no_player_nearby": "Kein Spieler in der Nähe",
+	"no_player_nearby": "Kein Spieler in der Nähe!",
+	"no_bandages": "Keine Bandagen in deiner Tasche!",
+	"no_vehicle_open": "Fahrzeug ist nicht verschlossen",
+	"no_dragging": "Du führst keine Person.",
 	
 	"account_management": "Kontoverwaltung",
 	"account_not": "Nicht genügend Geld",
 	"ammount": "Betrag",
 	
 	"harm_check": "Verletzungsanalyse",
+	"visual_check": "Visueller Zustand",
 	
 	"harm_arm_l_shoulder": "Verletzung des linken Schlüsselbeins",
 	"harm_arm_r_shoulder": "Verletzung des rechten Schlüsselbeins",
@@ -28,7 +32,7 @@
 	"harm_chest": "Brustverletzung",
 	"harm_belly": "Bauchverletzung",
 	"harm_chest_back": "Brust- und/oder Rückenverletzung",
-	"harm_pelvis_lower_back": "Verletzung des Beckens und/oder des unteren Rückens"
+	"harm_pelvis_lower_back": "Verletzung des Beckens und/oder des unteren Rückens",
 	"harm_no_visual": "Keine Sichtverletzung",
 	
 	"reason_of_harm": "Art der Wunde oder Munition die die Wunde verursacht hat: ",
@@ -36,11 +40,35 @@
 	
 	"coma": "Koma",
 	"send_distress": "Eine Person fiel ins Koma.",
+	"send_distress_done": "Eine Meldung an den EMC wurde abgeschickt.",
 	"revive_msg": "~r~Du bist ausgeknockt. Du wirst automatisch wiederbelebt in ~b~%s ~r~Sekunden.",
+	"revive_needed": "Bürger muss wiederbelebt werden.",
+	"revive_not_needed": "Sie können niemanden wiederbeleben, der nicht bewusstlos ist!",
 	"revive_success": "Du wurdest wiederbelebt...",
+	"revive_in_progress": "Wiederbelebung im Gange...",
+	"revive_success_from": "Du wurdest von %s wiederbelebt...",
 	"healed": "Du wurdest geheilt.",
+	"wound_wrapped": "Verbunden",
+	"wound_nothing": "Keine sichtbaren Anzeichen einer Verletzung",
+	"pulse": "Puls",
+	"pulse_low": "Schwacher Puls: ",
+	"pulse_middle": "Mittlerer Puls: ",
+	"pulse_normal": "Normaler Puls: ",
+	"pulse_heigh": "Hoher Puls: ",
 	
+	"form_fill_all": "Bitte füllen Sie alle Lücken aus",
 	"bed": "Bett",
 	"leave_bed": "Um aus dem Bett aufzustehen, drücken Sie [X]",
 	"try_again": "Bitte versuchen Sie es erneut, es ist ein Fehler aufgetreten!",
+
+	"vehicle_clean": "Reinige Fahrzeug...",
+	"vehicle_cleaned": "Fahrzeug gesäubert",
+	"vahicle_repaired": "Fahrzeug repariert.",
+	"vehicle_open_fail": "Du hast beim Aufbrechen versagt...",
+	"vehicle_open": "Knacke Fahrzeug...",
+	"vehicle_opened": "Fahrzeug geöffnet",
+	"vehicle_open_tool": "Du benötigst einen Dietrich",
+	
+	"console_log_death": "[nl_interactions:EMS] [^2INFO^7] %s verstarb und wurde im DB Status „Tot“ eingetragen",
+	"console_log_offline": "Dieser Spieler ist nicht mehr online"
 }

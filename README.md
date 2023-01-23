@@ -10,6 +10,8 @@ Just a simple pack of <a href='https://github.com/overextended/ox_target'>ox_tar
 <p align='center'><i>Feel free to modify to your liking. Please keep my name <b>(DevMinkh)</b> in the credits of the fxmanifest. <b>If your modification is a bug-fix I ask that you make a pull request, this is a free script; please contribute when you can.</b></i></p>
 
 # Features
+- deathscreen with timer DONE
+- autorespawn at custom location DONE
 - ox_target for police
 -- cuff TODO
 -- search TEST

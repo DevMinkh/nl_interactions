@@ -103,17 +103,17 @@ exports['qtarget']:Vehicle({
             job = "fnl"
         },
     --[[
-    {
-    event = "nl_interactions:lockpick",
-    icon = "fas fa-unlock",
-    item = 'lockpick',
-    label = 'Fahrzeug knacken',
-    canInteract = function(entity)
-    if (ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'mechanic' or ESX.PlayerData.job.name == 'fnl' or ESX.PlayerData.job.name == 'bpc') then return false end
-    return true
-    end,
-    },
-    ]]--
+        {
+            event = "nl_interactions:lockpick",
+            icon = "fas fa-unlock",
+            item = 'lockpick',
+            label = 'Fahrzeug knacken',
+            canInteract = function(entity)
+            if (ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'mechanic' or ESX.PlayerData.job.name == 'fnl' or ESX.PlayerData.job.name == 'bpc') then return false end
+                return true
+            end,
+        },
+        ]]--
     },
     distance = 2.0
 })

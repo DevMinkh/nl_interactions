@@ -1,7 +1,18 @@
--- Load the locale module
+--[[ Loading the ox_lib locales ]]--
 lib.locale()
 
--- Load ESX
+--[[ Define locals ]]--
+local IsDead = false
+local StatusReload = false
+local IsBleeding = false
+local secondsRemaining = config.bleedoutTimer
+
+local TimerDeath = 0
+local TimerDeathMax = 720000
+local TimerAddedPerTick = 1000
+local ems = AddBlipForCoord(config.blipsHospital.position.x, config.blipsHospital.position.y, config.blipsHospital.position.z)
+
+--[[ Load ESX ]]--
 ESX = exports['es_extended']:getSharedObject()
 
 RegisterNetEvent('esx:playerLoaded')
@@ -19,24 +30,12 @@ AddEventHandler('esx:onPlayerSpawn', function()
     end
 end)
 
--- Define locals
-local IsDead = false
-local StatusReload = false
-local IsBleeding = false
-local secondsRemaining = config.bleedoutTimer
-
-local TimerDeath = 0
-local TimerDeathMax = 720000
-local TimerAddedPerTick = 1000
-
 Citizen.CreateThread(function()
     while ESX.GetPlayerData().job == nil do
         Citizen.Wait(10)
     end
     if ESX.IsPlayerLoaded() then
-
         ESX.PlayerData = ESX.GetPlayerData()
-
     end
 
     Wait(1000)
@@ -49,8 +48,6 @@ Citizen.CreateThread(function()
         end
     end)
 
-    local ems = AddBlipForCoord(Config.BlipsHospital.position.x, Config.BlipsHospital.position.y, Config.BlipsHospital.position.z)
-
     SetBlipSprite(ems, config.blipsHospital.sprite)
     SetBlipDisplay(ems, config.blipsHospital.display)
     SetBlipScale(ems, config.blipsHospital.scale)
@@ -59,7 +56,6 @@ Citizen.CreateThread(function()
     BeginTextCommandSetBlipName("STRING")
     AddTextComponentString(config.blipsHospital.title)
     EndTextCommandSetBlipName(ems)
-
     RequestModel(config.pedModelPharma)
 
     while (not HasModelLoaded(config.pedModelPharma)) do
@@ -72,7 +68,7 @@ Citizen.CreateThread(function()
     FreezeEntityPosition(PharmaShop, true)
 end)
 
--- Death screen
+--[[ Death screen ]]--
 function SetDisplay(bool)
     SendNUIMessage({
         type = "show",
@@ -81,24 +77,24 @@ function SetDisplay(bool)
     })
 
     SendNUIMessage({action = 'starttimer', value = globalState.timer})
-
     SendNUIMessage({action = 'showbutton'})
-
     SetNuiFocus(bool, bool)
 end
 
--- On player death function
+-- [[ Overwrite esx on player death functino ]]--
 AddEventHandler('esx:onPlayerDeath', function(data)
     if not IsBleeding then
         IsBleeding = true
         if GetEntityHealth(PlayerPedId()) <= 105 then
             local WeaponKiller = GetPedCauseOfDeath(PlayerPedId())
             local WeapKoIs = false
-            for k,v in pairs(Config.WeapKo) do
+			--[[
+            for k,v in pairs(config.ceapKo) do
                 if WeaponKiller == joaat(v) then
                     WeapKoIs = true
                 end
             end
+			]]--
 
             if WeapKoIs and IsBleeding then
                 IsBleeding = true
@@ -196,7 +192,6 @@ AddEventHandler('playerSpawned', function(spawn)
 
                 TriggerServerEvent('nl_interactions:setDeathStatus', false)
 
-
                 local playerPed = PlayerPedId()
 
                 FreezeEntityPosition(playerPed, false)
@@ -213,18 +208,7 @@ end)
 
 RegisterNUICallback("button", function(data)
     SendNUIMessage({action = 'hidebutton'})
-    -- [[CHANGE THIS]] --
-    --[[
-		local anonym = false
-		local coords = GetEntityCoords(PlayerPedId())
-		local position = {x = coords.x, y = coords.y, z = coords.z - 1}
-		local jobreceived = JOBNAME
-		local message = MESSAGE
-		
-		TriggerServerEvent('roadphone:sendDispatch', GetPlayerServerId(PlayerId()), message, jobreceived, position, anonym)
-	]]--
     TriggerServerEvent('nl_interactions:sendDistressEms')
-
     SetNuiFocus(false, false)
 end)
 
@@ -233,12 +217,12 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
     ESX.PlayerData = xPlayer
 end)
 
-
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
     ESX.PlayerData.job = job
 end)
 
+--[[ Revive function ]]--
 RegisterNetEvent('nl_interactions:reviveems')
 AddEventHandler('nl_interactions:reviveems', function()
     local playerPed = PlayerPedId()
@@ -322,8 +306,8 @@ AddEventHandler('nl_interactions:ems_interaction_bed_client', function (data)
                     },
                 }
             }
-
-            exports.scully_emotemenu:Play(EmoteData, EmoteData.Variant)
+-- [[ CHANGE ]] --
+            --exports.scully_emotemenu:Play(EmoteData, EmoteData.Variant)
 			notify('warning', locale('leave_bed'), 8000, locale('bed'))
         else
 			notify('error', locale('try_again'), 8000, locale('bed'))

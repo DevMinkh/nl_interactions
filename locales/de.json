@@ -1,5 +1,6 @@
 {
-	"no_player_nearby": "Kein Spieler in der Nähe",
+	"no_player_nearby": "Kein Spieler in der Nähe!",
+	"no_bandages": "Keine Bandagen in deiner Tasche!",
 	
 	"account_management": "Kontoverwaltung",
 	"account_not": "Nicht genügend Geld",
@@ -28,7 +29,7 @@
 	"harm_chest": "Brustverletzung",
 	"harm_belly": "Bauchverletzung",
 	"harm_chest_back": "Brust- und/oder Rückenverletzung",
-	"harm_pelvis_lower_back": "Verletzung des Beckens und/oder des unteren Rückens"
+	"harm_pelvis_lower_back": "Verletzung des Beckens und/oder des unteren Rückens",
 	"harm_no_visual": "Keine Sichtverletzung",
 	
 	"reason_of_harm": "Art der Wunde oder Munition die die Wunde verursacht hat: ",
@@ -37,10 +38,14 @@
 	"coma": "Koma",
 	"send_distress": "Eine Person fiel ins Koma.",
 	"revive_msg": "~r~Du bist ausgeknockt. Du wirst automatisch wiederbelebt in ~b~%s ~r~Sekunden.",
+	"revive_needed": "Bürger muss wiederbelebt werden.",
 	"revive_success": "Du wurdest wiederbelebt...",
 	"healed": "Du wurdest geheilt.",
+	"wound_wrapped": "Verbunden",
 	
 	"bed": "Bett",
 	"leave_bed": "Um aus dem Bett aufzustehen, drücken Sie [X]",
 	"try_again": "Bitte versuchen Sie es erneut, es ist ein Fehler aufgetreten!",
+
+	"vahicle_repaired": "Fahrzeug repariert."
 }

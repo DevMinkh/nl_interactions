@@ -25,6 +25,7 @@ client_scripts {
 }
 
 server_scripts {
+	'@mysql-async/lib/MySQL.lua',
 	'server/*.lua'
 }
 
@@ -42,5 +43,5 @@ dependencies {
 	'ox_lib',
 	'ox_target',
 	'ox_inventory',
-	'bixbi_core'
+	'roadphone',
 }

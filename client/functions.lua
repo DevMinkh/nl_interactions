@@ -13,16 +13,16 @@ AddEventHandler('nl_interactions:repairVehicle', function(data)
             SetVehicleFixed(vehicle)
             SetVehicleDeformationFixed(vehicle)
             SetVehicleUndriveable(vehicle, false)
--- [[CHANGE THIS]] --
-            --exports['nl_interactions']:Notify('', 'Fahrzeug repariert.')
+            notify('success', locale('vahicle_repaired'), 2000)
         end
     end
 end)
 
 --[[
-RegisterNetEvent('bixbi_target:Hospital')
-AddEventHandler('bixbi_target:Hospital', function(data)
-    local dialog = exports['zf_dialog']:DialogInput({
+RegisterNetEvent('nl_interactions:hospital')
+AddEventHandler('nl_interactions:hospital', function(data)
+-- [[ CHANGE
+    --local dialog = exports['zf_dialog']:DialogInput({
         header = "Send to Hospital", 
         rows = {
             {
@@ -37,7 +37,7 @@ AddEventHandler('bixbi_target:Hospital', function(data)
     })
     if dialog ~= nil then
         if dialog[1].input == nil or dialog[2].input == nil then return end
-        TriggerServerEvent('bixbi_hospitaltp:Hospital', GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)), tonumber(dialog[1].input), dialog[2].input)
+        TriggerServerEvent('nl_interactions:hospital', GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)), tonumber(dialog[1].input), dialog[2].input)
     end
 end)
 ]]--
@@ -61,15 +61,12 @@ AddEventHandler('nl_interactions:bandage', function(data)
 				-- INSERT HEAL and ITEM
                 --TriggerServerEvent('esx_ambulancejob:removeItem', 'bandage')
                 --TriggerServerEvent('esx_ambulancejob:heal', GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)), 'big')
--- [[CHANGE THIS]] --
-                --TriggerEvent('nl_interactions:Notify', 'success', 'Verbunden')
+                notify('success', locale('wound_wrapped'), 2000)
             else
--- [[CHANGE THIS]] --
-                --TriggerEvent('nl_interactions:Notify', 'error', 'Bürger muss wiederbelebt werden!')
+                notify('warning', locale('revive_needed'), 2000)
             end
         else
--- [[CHANGE THIS]] --
-            --TriggerEvent('Notify', 'error', 'Keine Bandagen in deiner Tasche')
+            notify('warning', locale('no_bandages'), 2000)
         end
     end, 'bandage')
 end)
@@ -454,7 +451,7 @@ end
 function Respawn()
 
     SetDisplay(false, false)
-	SetEntityCoordsNoOffset(PlayerPedId(), GlobalState.RespawnCoords.x, GlobalState.RespawnCoords.y, GlobalState.RespawnCoords.z, false, false, false, true)
+	SetEntityCoordsNoOffset(PlayerPedId(), globalState.respawnCoords.x, globalState.respawnCoords.y, globalState.respawnCoords.z, false, false, false, true)
     NetworkResurrectLocalPlayer(GlobalState.RespawnCoords.x, GlobalState.RespawnCoords.y, GlobalState.RespawnCoords.z, GlobalState.RespawnHeading, true, false)
 	SetPlayerInvincible(PlayerPedId(), false)
     TriggerEvent('playerSpawned', GlobalState.RespawnCoords.x, GlobalState.RespawnCoords.y, GlobalState.RespawnCoords.z)
@@ -550,8 +547,7 @@ function loading(time, text)
 			combat = false,
 			mouse = false,
 		},
-	}) then function()
-	end)
+	}) then print('okay') else print('fail') end
 end
 exports('loading', loading)
 

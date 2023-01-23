@@ -1,3 +1,6 @@
+--[[ Loading the ox_lib locales ]]--
+lib.locale()
+
 --[[ Load ESX ]]--
 ESX = exports["es_extended"]:getSharedObject()
 

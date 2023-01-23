@@ -8,7 +8,7 @@ local IsBleeding = false
 local secondsRemaining = config.bleedoutTimer
 
 local TimerDeath = 0
-local TimerDeathMax = 720000
+local TimerDeathMax = globalState.timer * 1000 * 60
 local TimerAddedPerTick = 1000
 local ems = AddBlipForCoord(config.blipsHospital.position.x, config.blipsHospital.position.y, config.blipsHospital.position.z)
 

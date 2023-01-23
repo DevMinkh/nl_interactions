@@ -143,7 +143,7 @@ AddEventHandler('nl_interactions:putInVehicleStart', function(data)
     local distance = #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(draggingEntity))
     if (draggingEntity == nil or distance > 2.0) then
 -- [[CHANGE THIS]] --
-        --Notify('error', 'You\'re not dragging anyone.')
+        notify('error', 'You\'re not dragging anyone.')
         draggingEntity = nil
         return
     end
@@ -201,25 +201,25 @@ RegisterNetEvent('nl_interactions:forceOpen')
 AddEventHandler('nl_interactions:forceOpen', function(data)
     if GetVehicleDoorLockStatus(data.entity) == 1 or GetVehicleDoorLockStatus(data.entity) == 0 then
 -- [[CHANGE THIS]] --
-        --Notify('error', 'Fahrzeug ist nicht verschlossen')
+        notify('error', 'Fahrzeug ist nicht verschlossen')
         return
     end
     local playerPed = PlayerPedId()
     TaskStartScenarioInPlace(playerPed, 'WORLD_HUMAN_WELDING', 0, true)
 -- [[CHANGE THIS]] --
-    --exports['bixbi_core']:Loading(20000, 'Knacke Fahrzeug...')
+    loading(20000, 'Knacke Fahrzeug...')
     Citizen.Wait(20000)
     ClearPedTasksImmediately(playerPed)
 	TriggerEvent('renzu_garage:lockpick')
 -- [[CHANGE THIS]] --
-    --Notify('', 'Fahrzeug geöffnet')
+    notify('', 'Fahrzeug geöffnet')
 end)
 
 RegisterNetEvent('nl_interactions:lockpick')
 AddEventHandler('nl_interactions:lockpick', function(data)
     if GetVehicleDoorLockStatus(data.entity) == 1 or GetVehicleDoorLockStatus(data.entity) == 0 then
 -- [[CHANGE THIS]] --
-        --Notify('error', 'Fahrzeug ist nicht verschlossen')
+        notify('error', 'Fahrzeug ist nicht verschlossen')
         return
     end
 
@@ -229,7 +229,7 @@ AddEventHandler('nl_interactions:lockpick', function(data)
     end
     if (itemCount == 0) then
 -- [[CHANGE THIS]] --
-        --Notify('error', 'Du benötigst einen Dietrich')
+        notify('error', 'Du benötigst einen Dietrich')
         return 
     end
 
@@ -237,7 +237,7 @@ AddEventHandler('nl_interactions:lockpick', function(data)
     TaskStartScenarioInPlace(playerPed, 'WORLD_HUMAN_WELDING', 0, true)
     TriggerServerEvent('nl_interactions:removeItem', nil, 'lockpick', 1)
 -- [[CHANGE THIS]] --
-    --exports['bixbi_core']:Loading(20000, 'Knacke Fahrzeug...')
+    loading(20000, 'Knacke Fahrzeug...')
     Citizen.Wait(20000)
     ClearPedTasksImmediately(playerPed)
 
@@ -245,11 +245,11 @@ AddEventHandler('nl_interactions:lockpick', function(data)
     local random = math.random(1, 3)
     if (random == 1) then
 -- [[CHANGE THIS]] --
-        --Notify('error', 'Du hast beim Knacken versagt...')
+        notify('error', 'Du hast beim Knacken versagt...')
     else
         SetVehicleDoorsLocked(data.entity, 1)
         SetVehicleDoorsLockedForAllPlayers(data.entity, false)
-        Notify('', 'Fahrzeug geöffnet')
+        notify('info', 'Fahrzeug geöffnet')
     end
 end)
 
@@ -258,14 +258,14 @@ AddEventHandler('nl_interactions:CleanVehicle', function(data)
     local playerPed = PlayerPedId()
     TaskStartScenarioInPlace(playerPed, 'WORLD_HUMAN_MAID_CLEAN', 0, true)
 -- [[CHANGE THIS]] --
-    --exports['bixbi_core']:Loading(10000, 'Reinige Fahrzeug...')
+    loading(10000, 'Reinige Fahrzeug...')
     Citizen.Wait(10000)
 
     ClearPedTasksImmediately(playerPed)
     SetVehicleDirtLevel(data.entity, 0)
 	
 -- [[CHANGE THIS]] --
-    --Notify('', 'Fahrzeug gesäubert')
+    notify('info', 'Fahrzeug gesäubert')
 end)
 
 RegisterNetEvent('nl_interactions:EscortToggle')
@@ -283,7 +283,7 @@ function RevivePlayer(closestPlayer)
         local lib, anim = 'mini@cpr@char_a@cpr_str', 'cpr_pumpchest'
 		
 -- [[CHANGE THIS]] --        
-        --Notify"]:Alert('Réanimation', 'Réanimation en cours ...', 8000, 'ems')
+        notify('alert', 'Réanimation en cours ...', 8000, 'ems')
         for i=1, 15 do
             Citizen.Wait(900)
 
@@ -306,7 +306,7 @@ function RevivePlayer(closestPlayer)
         TriggerServerEvent('nl_interactions:reviveems', GetPlayerServerId(closestPlayer))
     else
 -- [[CHANGE THIS]] --
-		--Notify('', 'Kein Bürger gefunden')
+		notify('info', 'Kein Bürger gefunden')
     end
 end
 
@@ -328,26 +328,26 @@ function PulseState(Ped, Message)
             end
             if Pulse < 30 then 
 -- [[CHANGE THIS]] --
-                --Notify']:Alert('Pouls', 'Pouls faible Total : ' .. Pulse, 8000, 'error')
+                notify('error', 'Pouls faible Total : ' .. Pulse, 8000, 'Puls')
             elseif Pulse > 30 and Pulse < 60 then 
 -- [[CHANGE THIS]] --
-                --Notify']:Alert('Pouls', 'Pouls moyen Total : ' .. Pulse, 8000, 'warning')
+                notify('warning', 'Pouls moyen Total : ' .. Pulse, 8000, 'Puls')
             elseif Pulse > 60 and Pulse < 80 then 
 -- [[CHANGE THIS]] --
-                --Notify']:Alert('Pouls', 'Pouls normal Total : ' .. Pulse, 8000, 'success')
+                notify('success', 'Pouls normal Total : ' .. Pulse, 8000, 'Puls')
             elseif Pulse > 80 then 
 -- [[CHANGE THIS]] --
-                --Notify']:Alert('Pouls', 'Pouls élevé Total : ' .. Pulse, 8000, 'error')
+                notify('error', 'Pouls élevé Total : ' .. Pulse, 8000, 'Puls')
             end
         end
     end
     if Message ~= nil then
         Wait(1500)
 -- [[CHANGE THIS]] --
-        --Notify']:Alert('Etat Visuel', Message, 8000, 'warning')
+        notify('warning', Message, 8000, 'Etat Visuel')
     else
 -- [[CHANGE THIS]] --
-        --Notify']:Alert('Etat Visuel', 'Aucun Signe visuel de blessures', 8000, 'warning')
+        notify('warning', 'Aucun Signe visuel de blessures', 8000, 'Etat Visuel')
     end
 end
 
@@ -421,7 +421,7 @@ function RevivePlayer(closestPlayer)
         local playerPed = PlayerPedId()
         local lib, anim = 'mini@cpr@char_a@cpr_str', 'cpr_pumpchest'
 -- [[CHANGE THIS]] --
-        --Notify"]:Alert('Réanimation', 'Réanimation en cours ...', 8000, 'ems')
+        notify('info', 'Réanimation en cours ...', 8000, 'Reanimation')
         for i=1, 15 do
             Citizen.Wait(900)
 
@@ -443,8 +443,7 @@ function RevivePlayer(closestPlayer)
         -- On le Réanime
         TriggerServerEvent('nl_interactions:reviveems', GetPlayerServerId(closestPlayer))
     else
--- [[CHANGE THIS]] --
-        --Notify"]:Alert('Réanimation', 'Vous ne pouvez réanimer quelqu\'un qui n\'est pas inconscient !', 8000, 'ems')
+        notify('warning', locale('revive_not_needed'), 8000, 'EMS')
     end
 end
 

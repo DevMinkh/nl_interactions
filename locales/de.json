@@ -39,13 +39,19 @@
 	"send_distress": "Eine Person fiel ins Koma.",
 	"revive_msg": "~r~Du bist ausgeknockt. Du wirst automatisch wiederbelebt in ~b~%s ~r~Sekunden.",
 	"revive_needed": "Bürger muss wiederbelebt werden.",
+	"revive_not_needed": "Sie können niemanden wiederbeleben, der nicht bewusstlos ist!",
 	"revive_success": "Du wurdest wiederbelebt...",
+	"revive_success_from": "Du wurdest von %s wiederbelebt...",
 	"healed": "Du wurdest geheilt.",
 	"wound_wrapped": "Verbunden",
 	
+	"form_fill_all": "Bitte füllen Sie alle Lücken aus",
 	"bed": "Bett",
 	"leave_bed": "Um aus dem Bett aufzustehen, drücken Sie [X]",
 	"try_again": "Bitte versuchen Sie es erneut, es ist ein Fehler aufgetreten!",
 
-	"vahicle_repaired": "Fahrzeug repariert."
+	"vahicle_repaired": "Fahrzeug repariert.",
+	
+	"console_log_death": "[nl_interactions:EMS] [^2INFO^7] %s verstarb und wurde im DB Status „Tot“ eingetragen",
+	"console_log_offline": "Dieser Spieler ist nicht mehr online"
 }

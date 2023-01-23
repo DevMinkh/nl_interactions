@@ -37,8 +37,8 @@ AddEventHandler('nl_interactions:pullOutVehicleServer', function(target, vehicle
     end
 end)
 
-RegisterServerEvent('nl_interactions:healems')
-AddEventHandler('nl_interactions:healems', function(target, type)
+RegisterServerEvent('nl_interactions:heal')
+AddEventHandler('nl_interactions:heal', function(target, type)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	-- if xPlayer.job.name == Config.JobName then
@@ -49,18 +49,18 @@ AddEventHandler('nl_interactions:healems', function(target, type)
 			if count > 0 then 
 				exports.ox_inventory:RemoveItem(source, 'bandageems', 1)
 			else 
-				TriggerClientEvent('okokNotify:Alert', source, 'EMS', 'Vous n\'avez pas assez Bandages Médicale', 5000, 'error')
+				--TriggerClientEvent('okokNotify:Alert', source, 'EMS', 'Vous n\'avez pas assez Bandages Médicale', 5000, 'error')
 			end
 		elseif type == 'big' then
 			local count = exports.ox_inventory:Search(source, 'count', 'bandageems')
 			if count > 0 then 
 				exports.ox_inventory:RemoveItem(source, 'medkit', 1)
 			else 
-				TriggerClientEvent('okokNotify:Alert', source, 'EMS', 'Vous n\'avez pas assez Kit Médicale', 5000, 'error')
+				--TriggerClientEvent('okokNotify:Alert', source, 'EMS', 'Vous n\'avez pas assez Kit Médicale', 5000, 'error')
 			end
 		end
 	-- else
-	-- 	print(('nl_interactions:healems: %s attempted to heal!'):format(xPlayer.identifier))
+	-- 	print(('nl_interactions:heal: %s attempted to heal!'):format(xPlayer.identifier))
 	-- end
 end)
 
@@ -75,15 +75,15 @@ AddEventHandler('nl_interactions:sendDistressEms', function()
 
 end)
 
-RegisterNetEvent('nl_interactions:reviveems')
-AddEventHandler('nl_interactions:reviveems', function(playerId)
+RegisterNetEvent('nl_interactions:revive')
+AddEventHandler('nl_interactions:revive', function(playerId)
 	playerId = tonumber(playerId)
 	if source == '' and GetInvokingResource() == 'monitor' then -- txAdmin support
         local xTarget = ESX.GetPlayerFromId(playerId)
         if xTarget then
-            xTarget.triggerEvent('nl_interactions:reviveems')
+            xTarget.triggerEvent('nl_interactions:revive')
         else
-            print('ce joueur n\'est plus en ligne')
+            print(locale('console_log_offline'))
         end
 	else
 		local xPlayer = source and ESX.GetPlayerFromId(source)
@@ -101,30 +101,30 @@ AddEventHandler('nl_interactions:reviveems', function(playerId)
 
 									
 									if societyMoney > 0 then
-										TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez reçu <b style="color:#00FF00;">' .. societyMoney .. ' $</b> pour la réanimation', 5000, 'success')
+										--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez reçu <b style="color:#00FF00;">' .. societyMoney .. ' $</b> pour la réanimation', 5000, 'success')
 										account.addMoney(societyMoney)
 									end
 									if playerMoney > 0 then
-										TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez reçu <b style="color:#00FF00;">' .. playerMoney .. ' $</b> pour la réanimation <b>(Compte en banque)</b>', 5000, 'success')
+										--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez reçu <b style="color:#00FF00;">' .. playerMoney .. ' $</b> pour la réanimation <b>(Compte en banque)</b>', 5000, 'success')
 										xPlayer.addAccountMoney('bank', playerMoney)
 									end
 									
 									
 								else
 									if playerMoney > 0 then
-										TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez reçu <b style="color:#00FF00;">' .. playerMoney .. ' $</b> pour la réanimation <b>(Compte en banque)</b>', 5000, 'success')
+										--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez reçu <b style="color:#00FF00;">' .. playerMoney .. ' $</b> pour la réanimation <b>(Compte en banque)</b>', 5000, 'success')
 									end
 								end
 							end)
 							
 							exports.ox_inventory:RemoveItem(xPlayer.source, 'reakit', 1)
 
-							xTarget.triggerEvent('nl_interactions:reviveems')
+							xTarget.triggerEvent('nl_interactions:revive')
 				else
-					TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Le Joueur n\'est plus en ville !', 5000, 'error')
+					--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Le Joueur n\'est plus en ville !', 5000, 'error')
 				end
 			else 
-				TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous n\'avez pas de kit de réanimation !', 5000, 'error')
+				--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous n\'avez pas de kit de réanimation !', 5000, 'error')
 			end
 		-- end
 	end
@@ -151,7 +151,7 @@ ESX.RegisterServerCallback('nl_interactions:getDeathStatus', function(source, cb
 		}, function(isDead)
 					
 			if isDead then
-				print(('[nl_interactions:EMS] [^2INFO^7] "%s" A essayer de se connecter en status Dead : true'):format(xPlayer.identifier))
+				print(locale('console_log_death', format(xPlayer.identifier)))
 			end
 
 			cb(isDead)
@@ -165,11 +165,12 @@ lib.addCommand('group.admin', {'revive'}, function(source, args)
     if args.target ~= nil and args.target > 0 and GetPlayerName(args.target) ~= nil then
 		local TargetPlayer = ESX.GetPlayerFromId(args.target)
 
-		TriggerClientEvent('nl_interactions:reviveems', args.target)
-		TriggerClientEvent('okokNotify:Alert', source, 'Unité X', 'Vous avez réanimé  '.. TargetPlayer.getName(), 5000, 'success')
+		TriggerClientEvent('nl_interactions:revive', args.target)
+		TriggerClientEvent('nl_interactions:notify', source, 'EMS', locale('revive_success_from', TargetPlayer.getName(), 5000, 'success')
 	else 
-		TriggerClientEvent('nl_interactions:reviveems', source)
-		TriggerClientEvent('okokNotify:Alert', source, 'Unité X', 'Vous avez était Réanimer !', 5000, 'success')
+		
+		TriggerClientEvent('nl_interactions:revive', source)
+		TriggerClientEvent('nl_interactions:notify', source, 'EMS', locale('revive_success'), 5000, 'success')
     end
 end, {'target:number'})
 
@@ -177,7 +178,7 @@ RegisterNetEvent("nl_interactions:sendDemande")
 AddEventHandler("nl_interactions:sendDemande", function(lastname, firstname,phone, subject, desc)
 
 	if desc == nil or lastname == nil or firstname == nil or phone == nil or subject == nil then 
-		TriggerClientEvent('okokNotify:Alert', source, 'Sonnette EMS', 'Merci de remplir tous les champs', 5000, 'error')	
+		--TriggerClientEvent('nl_interactions:notify', source, 'EMS', locale('form_fill_all'), 5000, 'error')	
 	else 
 
 		TriggerClientEvent('nl_interactions:envoidemanderendezvous', source)
@@ -197,9 +198,9 @@ AddEventHandler('nl_interactions:gestionCompteEms', function(typeEvent, amount)
 			TriggerEvent('esx_addonaccount:getSharedAccount', "society_ambulance", function(account)
 				account.addMoney(amount)
 			end)
-			TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'CusTomoe', 'Vous avez déposer <b style="color:#00FF00;">' .. amount .. ' $</b> sur votre compte entreprise', 5000, 'success')
+			--TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'CusTomoe', 'Vous avez déposer <b style="color:#00FF00;">' .. amount .. ' $</b> sur votre compte entreprise', 5000, 'success')
 		else 
-            TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'CusTomoe', 'Vous n\'avez pas assez d\'argent sur vous !', 5000, 'error')
+            --TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'CusTomoe', 'Vous n\'avez pas assez d\'argent sur vous !', 5000, 'error')
         end
 	end
 
@@ -212,9 +213,9 @@ AddEventHandler('nl_interactions:gestionCompteEms', function(typeEvent, amount)
 		if societyAccountSog.money >= amount then 
             societyAccountSog.removeMoney(amount)
             exports.ox_inventory:AddItem(xPlayer.source, 'money', amount)
-            TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'CusTomoe', 'Vous avez retirer <b style="color:red;">' .. amount .. ' $</b> sur votre compte entreprise', 5000, 'success')
+            --TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'CusTomoe', 'Vous avez retirer <b style="color:red;">' .. amount .. ' $</b> sur votre compte entreprise', 5000, 'success')
         else 
-            TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'CusTomoe', 'Votre compte entreprise n\'a pas assez !', 5000, 'error')
+            --TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'CusTomoe', 'Votre compte entreprise n\'a pas assez !', 5000, 'error')
         end
 	end
 end)
@@ -228,10 +229,10 @@ AddEventHandler('nl_interactions:gestionEmployerPatronEms', function(typeEvent, 
         if xPlayer.job.grade_name == "boss" then
 			if xTarget ~= nil then	
 				xTarget.setJob(xPlayer.job.name, 0)
-				TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez recruter <b style="color:#00FF00;">' .. xTarget.name, 5000, 'success')
-				TriggerClientEvent('okokNotify:Alert', xTarget.source, 'EMS', 'Vous avez été recruter par <b style="color:#00FF00;">' .. xPlayer.name, 5000, 'success')
+				--TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'EMS', 'Vous avez recruter <b style="color:#00FF00;">' .. xTarget.name, 5000, 'success')
+				--TriggerClientEvent('nl_interactions:notify', xTarget.source, 'EMS', 'Vous avez été recruter par <b style="color:#00FF00;">' .. xPlayer.name, 5000, 'success')
 			else
-				TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Le Joueur est trop loin !', 5000, 'error')
+				--TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'EMS', 'Le Joueur est trop loin !', 5000, 'error')
 			end
 		end
     end
@@ -240,13 +241,13 @@ AddEventHandler('nl_interactions:gestionEmployerPatronEms', function(typeEvent, 
 			if xTarget ~= nil then
 				if xTarget.job.grade < 5 then 
 					xTarget.setJob(xPlayer.job.name, xTarget.job.grade + 1)
-					TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez promu <b style="color:#00FF00;">' .. xTarget.name, 5000, 'success')
-					TriggerClientEvent('okokNotify:Alert', xTarget.source, 'EMS', 'Vous avez été promu par <b style="color:#00FF00;">' .. xPlayer.name, 5000, 'success')
+					--TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'EMS', 'Vous avez promu <b style="color:#00FF00;">' .. xTarget.name, 5000, 'success')
+					--TriggerClientEvent('nl_interactions:notify', xTarget.source, 'EMS', 'Vous avez été promu par <b style="color:#00FF00;">' .. xPlayer.name, 5000, 'success')
 				else 
-					TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous ne pouvez pas promouvoir plus !', 5000, 'error')
+					--TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'EMS', 'Vous ne pouvez pas promouvoir plus !', 5000, 'error')
 				end
 			else
-				TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Le Joueur est trop loin !', 5000, 'error')
+				--TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'EMS', 'Le Joueur est trop loin !', 5000, 'error')
 			end
         end
     end
@@ -254,10 +255,10 @@ AddEventHandler('nl_interactions:gestionEmployerPatronEms', function(typeEvent, 
         if xPlayer.job.grade_name == "boss" then
 			if xTarget ~= nil then
 				xTarget.setJob("unemployed", 0)
-				TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez virer <b style="color:red;">' .. xTarget.name, 5000, 'success')
-				TriggerClientEvent('okokNotify:Alert', xTarget.source, 'EMS', 'Vous avez été virer par <b style="color:red;">' .. xPlayer.name, 5000, 'success')
+				--TriggerClientEvent('nl_interactions:notify', xPlayer.source, 'EMS', 'Vous avez virer <b style="color:red;">' .. xTarget.name, 5000, 'success')
+				--TriggerClientEvent('nl_interactions:notify', xTarget.source, 'EMS', 'Vous avez été virer par <b style="color:red;">' .. xPlayer.name, 5000, 'success')
 			else
-				TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Le Joueur est trop loin !', 5000, 'error')
+				--TriggerClientEvent('nl_interactions:notify', 'error', 'Le Joueur est trop loin !', 5000, 'EMS')
 			end
 		end
     end

@@ -166,7 +166,7 @@ lib.addCommand('group.admin', {'revive'}, function(source, args)
 		local TargetPlayer = ESX.GetPlayerFromId(args.target)
 
 		TriggerClientEvent('nl_interactions:revive', args.target)
-		TriggerClientEvent('nl_interactions:notify', source, 'EMS', locale('revive_success_from', TargetPlayer.getName(), 5000, 'success')
+		TriggerClientEvent('nl_interactions:notify', source, 'EMS', locale('revive_success_from'), TargetPlayer.getName(), 5000, 'success')
 	else 
 		
 		TriggerClientEvent('nl_interactions:revive', source)

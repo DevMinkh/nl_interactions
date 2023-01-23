@@ -29,6 +29,7 @@ Just a simple pack of <a href='https://github.com/overextended/ox_target'>ox_tar
 - ox_lib
 - ox_target
 - ox_inventory
+- roadphone (TODO shared_config for dispatches, then it is optional)
 - renzu_garage (later optional)
 - renzu hud (optional)
 - renzu_hygene (optional)

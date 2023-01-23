@@ -55,6 +55,9 @@
 	"pulse_middle": "Mittlerer Puls: ",
 	"pulse_normal": "Normaler Puls: ",
 	"pulse_heigh": "Hoher Puls: ",
+	"revive_success_from": "Du wurdest von %s wiederbelebt...",
+	"healed": "Du wurdest geheilt.",
+	"wound_wrapped": "Verbunden",
 	
 	"form_fill_all": "Bitte füllen Sie alle Lücken aus",
 	"bed": "Bett",
@@ -68,6 +71,7 @@
 	"vehicle_open": "Knacke Fahrzeug...",
 	"vehicle_opened": "Fahrzeug geöffnet",
 	"vehicle_open_tool": "Du benötigst einen Dietrich",
+	"vahicle_repaired": "Fahrzeug repariert.",
 	
 	"console_log_death": "[nl_interactions:EMS] [^2INFO^7] %s verstarb und wurde im DB Status „Tot“ eingetragen",
 	"console_log_offline": "Dieser Spieler ist nicht mehr online"

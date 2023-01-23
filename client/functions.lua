@@ -435,6 +435,7 @@ function Respawn()
 	
 	SetEntityCoordsNoOffset(PlayerPedId(), globalState.respawnCoords.x, globalState.respawnCoords.y, globalState.respawnCoords.z, false, false, false, true)
     NetworkResurrectLocalPlayer(globalState.respawnCoords.x, globalState.respawnCoords.y, globalState.respawnCoords.z, globalState.respawnHeading, true, false)
+
 	SetPlayerInvincible(PlayerPedId(), false)
 	
 	TriggerServerEvent('esx:onPlayerSpawn')

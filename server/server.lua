@@ -91,47 +91,80 @@ AddEventHandler('nl_interactions:revive', function(playerId)
 	else
 		local xPlayer = source and ESX.GetPlayerFromId(source)
 
-		-- if xPlayer and xPlayer.job.name == Config.JobName then
-			local xTarget = ESX.GetPlayerFromId(playerId)
-			local count = exports.ox_inventory:Search(xPlayer.source, 'count', 'reakit')
-			if count > 0 then 
-				if xTarget then
-							local playerMoney  = Config.ReviveRewardPlayer
-							local societyMoney = Config.ReviveRewardSociety
+		--if xPlayer and xPlayer.job.name == Config.JobName then
+		local xTarget = ESX.GetPlayerFromId(playerId)
+		local count = exports.ox_inventory:Search(xPlayer.source, 'count', 'reakit')
+		if count > 0 then 
+			if xTarget then
+				local playerMoney  = Config.ReviveRewardPlayer
+				local societyMoney = Config.ReviveRewardSociety
 
-							TriggerEvent('esx_addonaccount:getSharedAccount', 'society_ambulance', function(account)
-								if account then
-
-									
-									if societyMoney > 0 then
-										--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez reçu <b style="color:#00FF00;">' .. societyMoney .. ' $</b> pour la réanimation', 5000, 'success')
-										account.addMoney(societyMoney)
-									end
-									if playerMoney > 0 then
-										--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez reçu <b style="color:#00FF00;">' .. playerMoney .. ' $</b> pour la réanimation <b>(Compte en banque)</b>', 5000, 'success')
-										xPlayer.addAccountMoney('bank', playerMoney)
-									end
-									
-									
-								else
-									if playerMoney > 0 then
-										--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous avez reçu <b style="color:#00FF00;">' .. playerMoney .. ' $</b> pour la réanimation <b>(Compte en banque)</b>', 5000, 'success')
-									end
-								end
-							end)
-							
-							exports.ox_inventory:RemoveItem(xPlayer.source, 'reakit', 1)
-
-							xTarget.triggerEvent('nl_interactions:revive')
-				else
-					--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Le Joueur n\'est plus en ville !', 5000, 'error')
+				TriggerEvent('esx_addonaccount:getSharedAccount', 'society_ambulance', function(account)
+					if account then
+						if societyMoney >= 0 then
+							TriggerClientEvent('nl_interactions:notify', 'success', locale('revive_society_paid', societyMoney), 5000, 'EMS')
+							account.addMoney(societyMoney)
+						end
+						if playerMoney > 0 then
+							TriggerClientEvent('nl_interactions:notify', 'success', locale('revive_society_paid', playerMoney), 5000, 'EMS')
+							xPlayer.addAccountMoney('bank', playerMoney)
+						end
+					else
+						if playerMoney > 0 then
+							TriggerClientEvent('nl_interactions:notify', 'success', locale('revive_society_paid', playerMoney), 5000, 'EMS')
+						end
+					end
+				end)
+				
+				if config.useRakit == true then
+					exports.ox_inventory:RemoveItem(xPlayer.source, 'reakit', 1)
 				end
-			else 
-				--TriggerClientEvent('okokNotify:Alert', xPlayer.source, 'EMS', 'Vous n\'avez pas de kit de réanimation !', 5000, 'error')
+				xTarget.triggerEvent('nl_interactions:revive')
+			else
+				TriggerClientEvent('nl_interactions:notify', 'warning', locale('no_rakit'), 5000, 'EMS')
 			end
-		-- end
+		else 
+			TriggerClientEvent('nl_interactions:notify', 'error', locale('console_log_offline'), 5000, 'EMS')
+		end
+		--end
 	end
 end)
+
+--[[
+RegisterNetEvent('nl_interactions:revive')
+AddEventHandler('nl_interactions:revive', function(playerId)
+	playerId = tonumber(playerId)
+		local xPlayer = source and ESX.GetPlayerFromId(source)
+
+		if xPlayer and xPlayer.job.name == 'ambulance' then
+			local xTarget = ESX.GetPlayerFromId(playerId)
+			if xTarget then
+				if deadPlayers[playerId] then
+					if Config.ReviveReward > 0 then
+						xPlayer.showNotification(TranslateCap('revive_complete_award', xTarget.name, Config.ReviveReward))
+						xPlayer.addMoney(Config.ReviveReward, "Revive Reward")
+						xTarget.triggerEvent('nl_interactions:revive')
+					else
+						xPlayer.showNotification(TranslateCap('revive_complete', xTarget.name))
+						xTarget.triggerEvent('nl_interactions:revive')
+					end
+					local Ambulance = ESX.GetExtendedPlayers("job", "ambulance")
+
+					for _, xPlayer in pairs(Ambulance) do
+						if xPlayer.job.name == 'ambulance' then
+							xPlayer.triggerEvent('nl_interactions:PlayerNotDead', playerId)
+						end
+					end
+					deadPlayers[playerId] = nil
+				else
+					xPlayer.showNotification(TranslateCap('player_not_unconscious'))
+				end
+			else
+				xPlayer.showNotification(TranslateCap('revive_fail_offline'))
+			end
+		end
+end)
+]]--
 
 RegisterNetEvent('nl_interactions:setDeathStatus')
 AddEventHandler('nl_interactions:setDeathStatus', function(isDead)
@@ -176,6 +209,16 @@ lib.addCommand('group.admin', {'revive'}, function(source, args)
 		TriggerClientEvent('nl_interactions:notify', 'success', locale('revive_success'), 5000, 'EMS')
     end
 end, {'target:number'})
+
+--[[ CHANGE ]]--
+--[[
+lib.addCommand('group.admin', {'reviveall'}, function(source, args)
+	-- fix this to revive all players
+	-- maybe needed at a WL free time
+	TriggerClientEvent('nl_interactions:revive', source)
+	TriggerClientEvent('nl_interactions:notify', 'success', locale('revive_success'), 5000, 'EMS')
+end, {'target:number'})
+]]--
 
 RegisterNetEvent("nl_interactions:sendDemande")
 AddEventHandler("nl_interactions:sendDemande", function(lastname, firstname, phone, subject, desc)
@@ -421,6 +464,58 @@ end)
 RegisterServerEvent('nl_interactions:removeFromInstance')
 AddEventHandler('nl_interactions:removeFromInstance', function(source)
     if (GetPlayerRoutingBucket(source) ~= 0) then TriggerEvent('nl_interactions:addToInstance', source, 0) end
+end)
+
+ESX.RegisterServerCallback('nl_interactions:removeItemsAfterRPDeath', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if config.oxInventory and config.removeItemsAfterRPDeath then
+		exports.ox_inventory:ClearInventory(xPlayer.source)
+		return cb()
+	end
+
+	if config.removeCashAfterRPDeath then
+		if xPlayer.getMoney() > 0 then
+			xPlayer.removeMoney(xPlayer.getMoney(), "Death")
+		end
+
+		if xPlayer.getAccount('black_money').money > 0 then
+			xPlayer.setAccountMoney('black_money', 0, "Death")
+		end
+	end
+
+	if config.removeItemsAfterRPDeath then
+		for i=1, #xPlayer.inventory, 1 do
+			if xPlayer.inventory[i].count > 0 then
+				xPlayer.setInventoryItem(xPlayer.inventory[i].name, 0)
+			end
+		end
+	end
+
+	if config.oxInventory then return cb() end
+
+	local playerLoadout = {}
+	if config.removeWeaponsAfterRPDeath then
+		for i=1, #xPlayer.loadout, 1 do
+			xPlayer.removeWeapon(xPlayer.loadout[i].name)
+		end
+	else -- save weapons & restore em' since spawnmanager removes them
+		for i=1, #xPlayer.loadout, 1 do
+			table.insert(playerLoadout, xPlayer.loadout[i])
+		end
+
+		-- give back wepaons after a couple of seconds
+		CreateThread(function()
+			Wait(5000)
+			for i=1, #playerLoadout, 1 do
+				if playerLoadout[i].label ~= nil then
+					xPlayer.addWeapon(playerLoadout[i].name, playerLoadout[i].ammo)
+				end
+			end
+		end)
+	end
+
+	cb()
 end)
 
 ESX.RegisterServerCallback('nl_interactions:illegalTaskBlacklist', function(source, cb)

@@ -270,58 +270,58 @@ end)
 
 AddEventHandler('nl_interactions:ems_interaction_bed_client', function (data)
 
-        if DoesEntityExist(data.entity) then
-            local entityPos = GetEntityCoords(data.entity)
-            local entityHeading = GetEntityHeading(data.entity)
-            local newEntyPosY = entityPos.y
-            local newEntyPosZ = entityPos.z
-            local newEntyPosX = entityPos.x
+	if DoesEntityExist(data.entity) then
+		local entityPos = GetEntityCoords(data.entity)
+		local entityHeading = GetEntityHeading(data.entity)
+		local newEntyPosY = entityPos.y
+		local newEntyPosZ = entityPos.z
+		local newEntyPosX = entityPos.x
 
-            if data.typeLit == "big" then
-                entityHeading = entityHeading + 180.0
-                newEntyPosY = entityPos.y
-            end
-            if data.typeLit == "little" then
-                entityHeading = entityHeading + 90.0
-                newEntyPosY = entityPos.y
-            end
-            if data.typeLit == "morgue" then
-                entityHeading = entityHeading + 180.0
-                newEntyPosY = entityPos.y - 0.40
-            end
-            if data.typeLit == "morguelittle" then
-                entityHeading = entityHeading
-                newEntyPosY = entityPos.y + 0.10
-                newEntyPosZ = entityPos.z + 0.60
-            end
-            if data.typeLit == "echo" then
-                entityHeading = entityHeading + 90.0
-                newEntyPosY = entityPos.y + 0.15
-                newEntyPosX = entityPos.x + 0.15
-            end
+		if data.typeLit == "big" then
+			entityHeading = entityHeading + 180.0
+			newEntyPosY = entityPos.y
+		end
+		if data.typeLit == "little" then
+			entityHeading = entityHeading + 90.0
+			newEntyPosY = entityPos.y
+		end
+		if data.typeLit == "morgue" then
+			entityHeading = entityHeading + 180.0
+			newEntyPosY = entityPos.y - 0.40
+		end
+		if data.typeLit == "morguelittle" then
+			entityHeading = entityHeading
+			newEntyPosY = entityPos.y + 0.10
+			newEntyPosZ = entityPos.z + 0.60
+		end
+		if data.typeLit == "echo" then
+			entityHeading = entityHeading + 90.0
+			newEntyPosY = entityPos.y + 0.15
+			newEntyPosX = entityPos.x + 0.15
+		end
 
-            SetEntityHeading(cache.ped, entityHeading)
-            SetEntityCoords(cache.ped, newEntyPosX, newEntyPosY, newEntyPosZ, true, false, false, false)
-            LoadAnim("anim@gangops@morgue@table@")
-            --TaskPlayAnim(cache.ped, "anim@gangops@morgue@table@", "body_search", 8.0, 8.0, -1, 1, 0, false, false, false)
+		SetEntityHeading(cache.ped, entityHeading)
+		SetEntityCoords(cache.ped, newEntyPosX, newEntyPosY, newEntyPosZ, true, false, false, false)
+		LoadAnim("anim@gangops@morgue@table@")
+		--TaskPlayAnim(cache.ped, "anim@gangops@morgue@table@", "body_search", 8.0, 8.0, -1, 1, 0, false, false, false)
 
-            local EmoteData = {
-                Label = 'Passout 3',
-                Command = 'passout3',
-                Animation = 'body_search',
-                Dictionary = 'anim@gangops@morgue@table@',
-                Options = {
-                    Flags = {
-                        Loop = true
-                    },
-                }
-            }
+		local EmoteData = {
+			Label = 'Passout 3',
+			Command = 'passout3',
+			Animation = 'body_search',
+			Dictionary = 'anim@gangops@morgue@table@',
+			Options = {
+				Flags = {
+					Loop = true
+				},
+			}
+		}
 -- [[ CHANGE ]] --
-            --exports.scully_emotemenu:Play(EmoteData, EmoteData.Variant)
-			notify('warning', locale('leave_bed'), 8000, locale('bed'))
-        else
-			notify('error', locale('try_again'), 8000, locale('bed'))
-        end
+		--exports.scully_emotemenu:Play(EmoteData, EmoteData.Variant)
+		notify('warning', locale('leave_bed'), 8000, locale('bed'))
+	else
+		notify('error', locale('try_again'), 8000, locale('bed'))
+	end
 end)
 
 AddEventHandler('nl_interactions:ems_interaction_bed_client_echo', function (data)

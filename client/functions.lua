@@ -299,6 +299,25 @@ function RevivePlayer(closestPlayer)
     end
 end
 
+function RemoveItemsAfterRPDeath()
+  TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
+
+  CreateThread(function()
+    ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
+      local RespawnCoords, ClosestHospital = GetClosestRespawnPoint()
+
+      ESX.SetPlayerData('loadout', {})
+
+      DoScreenFadeOut(800)
+      RespawnPed(PlayerPedId(), RespawnCoords, ClosestHospital.heading)
+      while not IsScreenFadedOut() do
+        Wait(0)
+      end
+      DoScreenFadeIn(800)
+    end)
+  end)
+end
+
 --[[ Check pulse ]]--
 function PulseState(Ped, Message)
     local PedPlayer = GetPlayerPed(Ped)

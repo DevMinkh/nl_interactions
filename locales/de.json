@@ -1,6 +1,7 @@
 {
 	"no_player_nearby": "Kein Spieler in der Nähe!",
 	"no_bandages": "Keine Bandagen in deiner Tasche!",
+	"no_rakit": "Kein Defibrillator in deiner Tasche",
 	"no_vehicle_open": "Fahrzeug ist nicht verschlossen",
 	"no_dragging": "Du führst keine Person.",
 	
@@ -47,6 +48,10 @@
 	"revive_success": "Du wurdest wiederbelebt...",
 	"revive_in_progress": "Wiederbelebung im Gange...",
 	"revive_success_from": "Du wurdest von %s wiederbelebt...",
+	
+	"revive_society_paid": "Die Gebühren in Höhe von %s $ wurden an die Firma überwiesen.",
+	"revive_bank_paid": "Die Gebühren in Höhe von %s $ wurden an dein Konto überwiesen.",
+	
 	"healed": "Du wurdest geheilt.",
 	"wound_wrapped": "Verbunden",
 	"wound_nothing": "Keine sichtbaren Anzeichen einer Verletzung",

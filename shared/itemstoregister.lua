@@ -10,6 +10,6 @@
 	['reakit'] {
 		label = 'Defibrillator',
 		weight = 775,
-		stack = true,
+		stack = true, -- false if u want to reuse it (config.useRakit = false)
 		close = true
 	}

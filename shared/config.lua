@@ -8,13 +8,20 @@ GlobalState.RespawnHeading = 1.0148 -- heading for respawncoords
 --[[ basic settings ]]--
 config = {}
 
+config.oxInventory = true
 config.useRenzuHud = true -- if u use renzu_hud and renzu_hygene (reset status at respawn)
 
 config.jobName = 'ambulance'
 config.bleedoutTimer = 30
 
+config.useRakit = false -- if u want to remove the rakit after use
+
 config.reviveRewardPlayer = 700
 config.reviveRewardSociety = 700
+
+config.removeItemsAfterRPDeath = false
+config.removeItemsAfterRPDeath = false
+config.removeCashAfterRPDeath = false
 	
 config.blipsHospital = {
     position = vector3(-676.3265, 320.2641, 83.0832),
@@ -26,7 +33,7 @@ config.blipsHospital = {
     shortRange = true,
 }
 
-Config.BlipsPsy = {
+config.BlipsPsy = {
     position = vector3(-1905.6453, -573.2115, 19.0972),
     title = "Psychologie",
     sprite = 362,

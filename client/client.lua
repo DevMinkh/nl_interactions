@@ -2,13 +2,13 @@
 lib.locale()
 
 --[[ Define locals ]]--
-local IsDead = false
+local IsDead = 0
 local StatusReload = false
 local IsBleeding = false
 local secondsRemaining = config.bleedoutTimer
 
 local TimerDeath = 0
-local TimerDeathMax = globalState.timer * 1000 * 60
+local TimerDeathMax = GlobalState.Timer * 1000 * 60
 local TimerAddedPerTick = 1000
 local ems = AddBlipForCoord(config.blipsHospital.position.x, config.blipsHospital.position.y, config.blipsHospital.position.z)
 
@@ -42,9 +42,9 @@ Citizen.CreateThread(function()
 
     ESX.TriggerServerCallback('nl_interactions:getDeathStatus', function(isDead)
         if isDead  then
-            IsDead = true
+            IsDead = 1
         else
-            IsDead = false
+            IsDead = 0
         end
     end)
 
@@ -73,10 +73,10 @@ function SetDisplay(bool)
     SendNUIMessage({
         type = "show",
         status = bool,
-        time = globalState.timer,
+        time = GlobalState.Timer,
     })
 
-    SendNUIMessage({action = 'starttimer', value = globalState.timer})
+    SendNUIMessage({action = 'starttimer', value = GlobalState.Timer})
     SendNUIMessage({action = 'showbutton'})
     SetNuiFocus(bool, bool)
 end
@@ -100,7 +100,7 @@ AddEventHandler('esx:onPlayerDeath', function(data)
                 IsBleeding = true
                 SetEnableHandcuffs(ped, true)
                 -- exports.spawnmanager:setAutoSpawn(false)
-                -- loadAnimDict( "random@dealgonewrong" )
+                --lib.requestAnimDict( "random@dealgonewrong" )
                 -- TaskPlayAnim(PlayerPedId(), "random@dealgonewrong", "idle_a", 1.0, 1.0, -1, 1, 0, 0, 0, 0)
                 if secondsRemaining == 0 then
                     secondsRemaining = config.bleedoutTimer
@@ -118,13 +118,13 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 
             else
                 SetDisplay(true)
-                IsDead = true
+                IsDead = 1
                 StatusReload = true
                 TriggerServerEvent('nl_interactions:setDeathStatus', true)
 
                 while TimerDeath < TimerDeathMax do
                     Wait(TimerAddedPerTick)
-                    if IsDead then
+                    if IsDead == 1 then
                         ClearPedTasks(PlayerPedId())
                         TimerDeath = TimerDeath + TimerAddedPerTick
                     else
@@ -134,11 +134,11 @@ AddEventHandler('esx:onPlayerDeath', function(data)
                 end
                 TimerDeath = 0
 
-                -- Wait(globalState.timer * 60 * 1000)
+                -- Wait(GlobalState.Timer * 60 * 1000)
 
-                if IsDead then
+                if IsDead == 1 then
                     Respawn()
-                    IsDead = false
+                    IsDead = 0
                 end
             end
         end
@@ -162,7 +162,7 @@ end)
 CreateThread(function()
     while true do
         if IsPedDeadOrDying(PlayerPedId()) then
-            if IsPedDeadOrDying(PlayerPedId()) and IsDead then
+            if IsPedDeadOrDying(PlayerPedId()) and IsDead == 1 then
                 ClearPedTasksImmediately(PlayerPedId())
                 FreezeEntityPosition(PlayerPedId(), true)
             end
@@ -174,43 +174,43 @@ end)
 AddEventHandler('playerSpawned', function(spawn)
     ESX.TriggerServerCallback('nl_interactions:getDeathStatus', function(isDead)
 
-            if isDead and IsDead then
-                SetDisplay(true)
-                Wait(5000)
-                SetEntityHealth(ESX.PlayerData.ped, 0)
-            else
-                if StatusReload then
-                    TriggerEvent("esx_status:set", "hunger", 1000000)
-                    TriggerEvent("esx_status:set", "thirst", 1000000)
-					if config.useRenzuHud == true then
-						TriggerEvent("esx_status:set", "stress",  200000)
-						TriggerEvent("esx_status:set", "energy", 1000000)
-						TriggerEvent("esx_status:set", "pee", 1000000)
-						TriggerEvent("esx_status:set", "poop", 1000000)
-						TriggerEvent("esx_status:set", "hygiene", 1000000)
-						
-						TriggerEvent("esx_status:set", "fever", 0)
-					end
-                end
-                SetDisplay(false)
-                StatusReload = false
-                IsDead = false
-                if IsDead then
-                    IsDead = false
-                end
+		if isDead and IsDead == 0 then
+			SetDisplay(true)
+			Wait(5000)
+			SetEntityHealth(ESX.PlayerData.ped, 0)
+		else
+			if StatusReload then
+				TriggerEvent("esx_status:set", "hunger", 1000000)
+				TriggerEvent("esx_status:set", "thirst", 1000000)
+				if config.useRenzuHud == true then
+					TriggerEvent("esx_status:set", "stress",  200000)
+					TriggerEvent("esx_status:set", "energy", 1000000)
+					TriggerEvent("esx_status:set", "pee", 1000000)
+					TriggerEvent("esx_status:set", "poop", 1000000)
+					TriggerEvent("esx_status:set", "hygiene", 1000000)
+					
+					TriggerEvent("esx_status:set", "fever", 0)
+				end
+			end
+			SetDisplay(false)
+			StatusReload = false
+			IsDead = 0
+			if IsDead == 1 then
+				IsDead = 0
+			end
 
-                TriggerServerEvent('nl_interactions:setDeathStatus', false)
+			TriggerServerEvent('nl_interactions:setDeathStatus', false)
 
-                local playerPed = PlayerPedId()
+			local playerPed = PlayerPedId()
 
-                FreezeEntityPosition(playerPed, false)
-                ClearPedTasks(playerPed)
-                ClearPedSecondaryTask(playerPed)
-                ClearAllPedProps(playerPed)
+			FreezeEntityPosition(playerPed, false)
+			ClearPedTasks(playerPed)
+			ClearPedSecondaryTask(playerPed)
+			ClearAllPedProps(playerPed)
 
-                EnableControlAction(0, 288, true)
-                EnableControlAction(0, 289, true)
-            end
+			EnableControlAction(0, 288, true)
+			EnableControlAction(0, 289, true)
+		end
 
     end)
 end)
@@ -999,6 +999,19 @@ local optionsWheelChair = {
 }
 
 exports.ox_target:addGlobalVehicle(optionsWheelChair)
+
+CreateThread(function()
+	local EmsPsy = AddBlipForCoord(config.blipsPsy.position.x, config.blipsPsy.position.y, config.blipsPsy.position.z)
+
+	SetBlipSprite(EmsPsy, config.blipsPsy.sprite)
+	SetBlipDisplay(EmsPsy, config.blipsPsy.display)
+	SetBlipScale(EmsPsy, config.blipsPsy.scale)
+	SetBlipColour(EmsPsy, config.clipsPsy.colour)
+	SetBlipAsShortRange(EmsPsy, true)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString(config.blipsPsy.title)
+	EndTextCommandSetBlipName(EmsPsy)
+end)
 
 
 -- Test Animation : 

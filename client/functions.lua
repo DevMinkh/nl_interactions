@@ -338,63 +338,65 @@ end
 
 function WeaponHashEqualCauseOfDeath(hashWeapon)
     local result = nil
-    for k,v in pairs(Config.WeaponList) do 
+    for k,v in pairs(config.weaponList) do 
         if hashWeapon == v then 
             result = k
             break
         end
     end
-
-    if result ~= nil then 
-        if string.find(result, "balle9mm") then 
--- [[CHANGE THIS]] --
-            return "9MM"
-        elseif string.find(result, "balle50acp") then
--- [[CHANGE THIS]] --
-            return "50ACP"
-        elseif string.find(result, "balle44") then
--- [[CHANGE THIS]] --
-            return "44MM"
-        elseif string.find(result, "balle45acp") then
--- [[CHANGE THIS]] --
-            return "45ACP"
-        elseif string.find(result, "balle556") then
--- [[CHANGE THIS]] --
-            return "5.56MM"
-        elseif string.find(result, "balle12G") then
--- [[CHANGE THIS]] --
-            return "12G"
-        elseif string.find(result, "balleplomb") then
--- [[CHANGE THIS]] --
-            return "Plomb"
-        elseif string.find(result, "griffe") then
--- [[CHANGE THIS]] --
-            return "Griffes et Bleu - Armes Blanches"
-        elseif string.find(result, "coupure") then
--- [[CHANGE THIS]] --
-            return "Coupure - Armes Blanches"
-        elseif string.find(result, "bleu") then
--- [[CHANGE THIS]] --
-            return "Gros Ematome et Bleu - Armes Blanches"
-        elseif string.find(result, "brulure") then
--- [[CHANGE THIS]] --
-            return "Brulure"
-        elseif string.find(result, "balle762") then
--- [[CHANGE THIS]] --
-            return "7.62MM"
-        elseif string.find(result, "balle762NATO") then
--- [[CHANGE THIS]] --
-            return "7.62MM NATO"
-        elseif string.find(result, "poing") then 
--- [[CHANGE THIS]] --
-            return "Mains nues"
-        else 
--- [[CHANGE THIS]] --
-            return "Inconnu"
+	
+	 if result ~= nil then 
+        if string.find(result, "ammo9") then
+			return "9mm Munition"
+        elseif string.find(result, "ammorifle") then
+			return "5.56mm Munition"
+		elseif string.find(result, "ammorifle2") then
+			return "7.62mm Munition"
+		elseif string.find(result, "ammoshotgun") then
+			return "12G Slugs"
+		elseif string.find(result, "ammo22") then
+			return ".22er Munition"
+		elseif string.find(result, "ammo38") then
+			return "38er Munition"
+		elseif string.find(result, "ammo44") then
+			return "44er Munition"
+		elseif string.find(result, "ammo45") then
+			return "45er Munition"
+		elseif string.find(result, "ammo50") then
+			return "50er Munition"
+		elseif string.find(result, "ammomusket") then
+			return "Musketen Munition"
+		elseif string.find(result, "ammosniper") then
+			return "Sniper Munition"
+		elseif string.find(result, "ammoheavysniper") then
+			return "Sniper 2 Munition"
+		elseif string.find(result, "ammoemp") then
+			return "EMP"
+		elseif string.find(result, "melee") then
+			return "Stumpfe Gewalt"
+		elseif string.find(result, "knife") then
+			return "Schnittwunde"
+		elseif string.find(result, "gas") then
+			return "Gas"
+		elseif string.find(result, "fire") then
+			return "Feuer"
+		elseif string.find(result, "ammoflare") then
+			return "Flair"
+		elseif string.find(result, "grenade") then
+			return "Granate"
+		elseif string.find(result, "mine") then
+			return "Miene"
+		elseif string.find(result, "snow") then
+			return "Schneeball"
+		elseif string.find(result, "stun") then
+			return "Taser"
+		elseif string.find(result, "barehand") then
+			return "Waffenlos"
+		else
+            return "Unbekannt"
         end
     else 
--- [[CHANGE THIS]] --
-        return "Inconnu"
+        return "Unbekannt"
     end
 end
 
@@ -403,8 +405,8 @@ function RevivePlayer(closestPlayer)
     if closestPlayer ~= nil and closestPlayer > 0 and IsPedDeadOrDying(closestPlayerPed, true) then
         local playerPed = PlayerPedId()
         local lib, anim = 'mini@cpr@char_a@cpr_str', 'cpr_pumpchest'
--- [[CHANGE THIS]] --
-        exports['nl_interactions']:notify('info', 'Réanimation en cours ...', 8000, 'Reanimation')
+		
+        exports['nl_interactions']:notify('info', locale('revive_in_progress'), 8000, 'Reanimation')
         for i=1, 15 do
             Citizen.Wait(900)
 
@@ -413,7 +415,6 @@ function RevivePlayer(closestPlayer)
             end)
         end
 
-        -- On enlève les trace de sangs / blessures visuelles
         ClearPedBloodDamage(closestPlayerPed)
         ResetPedVisibleDamage(closestPlayerPed)
 
@@ -422,8 +423,6 @@ function RevivePlayer(closestPlayer)
             Wait(1)
         end
 
-        
-        -- On le Réanime
         TriggerServerEvent('nl_interactions:revive', GetPlayerServerId(closestPlayer))
     else
         exports['nl_interactions']:notify('warning', locale('revive_not_needed'), 8000, 'EMS')
@@ -433,8 +432,8 @@ end
 function Respawn()
     SetDisplay(false, false)
 	
-	SetEntityCoordsNoOffset(PlayerPedId(), globalState.respawnCoords.x, globalState.respawnCoords.y, globalState.respawnCoords.z, false, false, false, true)
-    NetworkResurrectLocalPlayer(globalState.respawnCoords.x, globalState.respawnCoords.y, globalState.respawnCoords.z, globalState.respawnHeading, true, false)
+	SetEntityCoordsNoOffset(PlayerPedId(), GlobalState.RespawnCoords.x, GlobalState.RespawnCoords.y, GlobalState.RespawnCoords.z, false, false, false, true)
+    NetworkResurrectLocalPlayer(GlobalState.RespawnCoords.x, GlobalState.RespawnCoords.y, GlobalState.RespawnCoords.z, GlobalState.RespawnHeading, true, false)
 
 	SetPlayerInvincible(PlayerPedId(), false)
 	
@@ -465,20 +464,6 @@ function RespawnPed(ped, coords, heading)
     IsBleeding = false
 end
 
---[[
-function RespawnPed(ped, coords, heading)
-  SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false)
-  NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
-  SetPlayerInvincible(ped, false)
-  ClearPedBloodDamage(ped)
-
-  TriggerServerEvent('esx:onPlayerSpawn')
-  TriggerEvent('esx:onPlayerSpawn')
-  TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
-end
-]]--
-
-
 function ResetSonnette()
     FirstName = nil 
     LastName = nil
@@ -504,13 +489,6 @@ function ClosePlayerForGestionEmployees()
     local PlayerCoords = GetEntityCoords(PlayerPedId())
     local ClosePlayer = lib.getClosestPlayer(PlayerCoords, 5, false)
     return ClosePlayer
-end
-
-function loadAnimDict(dict)
-    RequestAnimDict(dict)
-    while (not HasAnimDictLoaded(dict)) do        
-        Citizen.Wait(1)
-    end
 end
 
 function text(text)
@@ -570,13 +548,9 @@ function playAnim(ped, animDict, animName, duration, emoteMoving, playbackRate)
 	elseif (emoteMoving == false) then
 		movingType = 0
 	end
-    RequestAnimDict(animDict)
-    while not HasAnimDictLoaded(animDict) do Citizen.Wait(100) end
-
+	lib.requestAnimDict(animDict)
 	local playbackSpeed = playbackRate or 0
-    -- TaskPlayAnim(ped, animDict, animName, 1.0, -1.0, duration, movingType, 1, false, false, false)
 	TaskPlayAnim(ped, animDict, animName, 2.0, 2.0, duration, movingType, playbackSpeed, false, false, false)
-    RemoveAnimDict(animDict)
 end
 
 function addProp(ped, prop1, bone, off1, off2, off3, rot1, rot2, rot3, timer)

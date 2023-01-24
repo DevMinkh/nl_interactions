@@ -26,7 +26,7 @@ config.blipsHospital = {
     shortRange = true,
 }
 
-Config.BlipsPsy = {
+config.BlipsPsy = {
     position = vector3(-1905.6453, -573.2115, 19.0972),
     title = "Psychologie",
     sprite = 362,

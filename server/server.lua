@@ -44,27 +44,27 @@ RegisterServerEvent('nl_interactions:heal')
 AddEventHandler('nl_interactions:heal', function(target, type)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	-- if xPlayer.job.name == Config.JobName then
+	if xPlayer.job.name == config.jobName then
 		TriggerClientEvent('nl_interactions:healemsjob', target, type)
 		
 		if type == 'small' then 
-			local count = exports.ox_inventory:Search(source, 'count', 'bandageems')
+			local count = exports.ox_inventory:Search(source, 'count', 'bandage')
 			if count > 0 then 
-				exports.ox_inventory:RemoveItem(source, 'bandageems', 1)
+				exports.ox_inventory:RemoveItem(source, 'bandage', 1)
 			else 
 				--TriggerClientEvent('okokNotify:Alert', source, 'EMS', 'Vous n\'avez pas assez Bandages Médicale', 5000, 'error')
 			end
 		elseif type == 'big' then
-			local count = exports.ox_inventory:Search(source, 'count', 'bandageems')
+			local count = exports.ox_inventory:Search(source, 'count', 'bandage')
 			if count > 0 then 
 				exports.ox_inventory:RemoveItem(source, 'medkit', 1)
 			else 
 				--TriggerClientEvent('okokNotify:Alert', source, 'EMS', 'Vous n\'avez pas assez Kit Médicale', 5000, 'error')
 			end
 		end
-	-- else
+	else
 	-- 	print(('nl_interactions:heal: %s attempted to heal!'):format(xPlayer.identifier))
-	-- end
+	end
 end)
 
 RegisterServerEvent('nl_interactions:sendDistress')
@@ -96,8 +96,8 @@ AddEventHandler('nl_interactions:revive', function(playerId)
 		local count = exports.ox_inventory:Search(xPlayer.source, 'count', 'reakit')
 		if count > 0 then 
 			if xTarget then
-				local playerMoney  = Config.ReviveRewardPlayer
-				local societyMoney = Config.ReviveRewardSociety
+				local playerMoney  = config.reviveRewardPlayer
+				local societyMoney = config.reviveRewardSociety
 
 				TriggerEvent('esx_addonaccount:getSharedAccount', 'society_ambulance', function(account)
 					if account then
@@ -129,6 +129,8 @@ AddEventHandler('nl_interactions:revive', function(playerId)
 		--end
 	end
 end)
+
+exports('revive', revive)
 
 --[[
 RegisterNetEvent('nl_interactions:revive')
@@ -186,7 +188,7 @@ ESX.RegisterServerCallback('nl_interactions:getDeathStatus', function(source, cb
 			['@identifier'] = xPlayer.identifier
 		}, function(isDead)
 					
-			if isDead == 1 then
+			if isDead then
 				print(locale('console_log_death', xPlayer.identifier))
 			end
 
@@ -325,7 +327,7 @@ RegisterNetEvent('nl_interactions:givingWheelChair')
 AddEventHandler('nl_interactions:givingWheelChair', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	exports.ox_inventory:AddItem(xPlayer.source, 'wheelchairitem', 1)
+	exports.ox_inventory:AddItem(xPlayer.source, 'wheelchair', 1)
 end)
 
 RegisterNetEvent('nl_interactions:demandeAccueil')
@@ -369,7 +371,7 @@ function removeItem(src, item, count, metadata)
     if (src == nil) then src = source end
     if (src == nil) then return end
 
-    if (Config.OxInventory) then
+    if (config.oxInventory) then
         exports.ox_inventory:RemoveItem(src, item, count, metadata)
     else 
         local xPlayer = ESX.GetPlayerFromId(src)
@@ -415,7 +417,7 @@ end)
 
 function itemCount(source, item, metadata)
     if (source == nil) then return end
-    if (Config.OxInventory) then
+    if (config.cxInventory) then
         local itemCount = exports.ox_inventory:Search(source, 'count', item, metadata)
         if (itemCount == nil) then itemCount = 0 end
 		return itemCount
@@ -424,13 +426,13 @@ function itemCount(source, item, metadata)
         return xPlayer.getInventoryItem(item).count
 	end
 end
-exports('sv_itemCount', itemCount)
+exports('itemCount', itemCount)
 
-ESX.RegisterServerCallback('nl_interactions:itemCountCb', function(source, cb, item, metadata)
+ESX.RegisterServerCallback('nl_interactions:itemCount', function(source, cb, item, metadata)
     cb(itemCount(source, item, metadata))
 end)
-RegisterServerEvent('nl_interactions:sv_itemCount')
-AddEventHandler('nl_interactions:sv_itemCount', function(source, item, metadata)
+RegisterServerEvent('nl_interactions:itemCount')
+AddEventHandler('nl_interactions:itemCount', function(source, item, metadata)
     return itemCount(source, item, metadata)
 end)
 
@@ -443,13 +445,13 @@ function canHoldItem(source, item, count)
         return xPlayer.canCarryItem(item, count)
 	end
 end
-exports('sv_canHoldItem', canHoldItem)
+exports('canHoldItem', canHoldItem)
 
 ESX.RegisterServerCallback('nl_interactions:canHoldItem', function(source, cb, item, count)
     cb(canHoldItem(source, item, count))
 end)
-RegisterServerEvent('nl_interactions:sv_canHoldItem')
-AddEventHandler('nl_interactions:sv_canHoldItem', function(source, item, count)
+RegisterServerEvent('nl_interactions:canHoldItem')
+AddEventHandler('nl_interactions:canHoldItem', function(source, item, count)
     return canHoldItem(source, item, count)
 end)
 

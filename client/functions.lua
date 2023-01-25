@@ -50,7 +50,7 @@ AddEventHandler('nl_interactions:bandage', function(data)
     
     ESX.TriggerServerCallback('nl_interactions:itemCount', function(quantity)
         if quantity > 0 then
-            local health = GetEntityHealth(NetworkGetPlayerIndexFromPed(data.entity))
+            local health = GetEntityHealth(PlayerPedId(data.entity))
 
             if health > 0 then
                 exports['nl_interactions']:loading(10000, 'Verbinde...')
@@ -59,11 +59,11 @@ AddEventHandler('nl_interactions:bandage', function(data)
                 ClearPedTasks(playerPed)
 				
 				-- INSERT HEAL and ITEM
-                --TriggerServerEvent('esx_ambulancejob:removeItem', 'bandage')
-                --TriggerServerEvent('esx_ambulancejob:heal', GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)), 'big')
+                TriggerServerEvent('nl_interactions:removeItem', 'bandage')
+                TriggerServerEvent('nl_interactions:heal', GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)), 'big')
                 exports['nl_interactions']:notify('success', locale('wound_wrapped'), 2000)
             else
-                exports['nl_interactions']:notify('warning', locale('revive_needed'), 2000)
+				exports['nl_interactions']:notify('warning', locale('revive_needed'), 2000)
             end
         else
             exports['nl_interactions']:notify('warning', locale('no_bandages'), 2000)

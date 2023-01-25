@@ -2,7 +2,7 @@
 lib.locale()
 
 --[[ Define locals ]]--
-local IsDead = 0
+local IsDead = false
 local StatusReload = false
 local IsBleeding = false
 local secondsRemaining = config.bleedoutTimer
@@ -10,7 +10,6 @@ local secondsRemaining = config.bleedoutTimer
 local TimerDeath = 0
 local TimerDeathMax = GlobalState.Timer * 1000 * 60
 local TimerAddedPerTick = 1000
-local ems = AddBlipForCoord(config.blipsHospital.position.x, config.blipsHospital.position.y, config.blipsHospital.position.z)
 
 --[[ Load ESX ]]--
 ESX = exports['es_extended']:getSharedObject()
@@ -42,11 +41,13 @@ Citizen.CreateThread(function()
 
     ESX.TriggerServerCallback('nl_interactions:getDeathStatus', function(isDead)
         if isDead  then
-            IsDead = 1
-        else
-            IsDead = 0
+            IsDead = true
+        else 
+            IsDead = false
         end
     end)
+	
+	local ems = AddBlipForCoord(config.blipsHospital.position.x, config.blipsHospital.position.y, config.blipsHospital.position.z)
 
     SetBlipSprite(ems, config.blipsHospital.sprite)
     SetBlipDisplay(ems, config.blipsHospital.display)
@@ -88,20 +89,23 @@ AddEventHandler('esx:onPlayerDeath', function(data)
         if GetEntityHealth(PlayerPedId()) <= 105 then
             local WeaponKiller = GetPedCauseOfDeath(PlayerPedId())
             local WeapKoIs = false
-			--[[
-            for k,v in pairs(config.ceapKo) do
+			
+			print(WeaponKiller)
+			
+            for k,v in pairs(config.weapKo) do
                 if WeaponKiller == joaat(v) then
                     WeapKoIs = true
-                end
+                elseif GetPedSourceOfDeath(PlayerPedId()) == 0 then
+					WeapKoIs = true
+				end
             end
-			]]--
 
             if WeapKoIs and IsBleeding then
                 IsBleeding = true
                 SetEnableHandcuffs(ped, true)
-                -- exports.spawnmanager:setAutoSpawn(false)
-                --lib.requestAnimDict( "random@dealgonewrong" )
-                -- TaskPlayAnim(PlayerPedId(), "random@dealgonewrong", "idle_a", 1.0, 1.0, -1, 1, 0, 0, 0, 0)
+                exports.spawnmanager:setAutoSpawn(false)
+                lib.requestAnimDict( "random@dealgonewrong" )
+                TaskPlayAnim(PlayerPedId(), "random@dealgonewrong", "idle_a", 1.0, 1.0, -1, 1, 0, 0, 0, 0)
                 if secondsRemaining == 0 then
                     secondsRemaining = config.bleedoutTimer
                 end
@@ -118,13 +122,13 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 
             else
                 SetDisplay(true)
-                IsDead = 1
+                IsDead = true
                 StatusReload = true
                 TriggerServerEvent('nl_interactions:setDeathStatus', true)
 
                 while TimerDeath < TimerDeathMax do
                     Wait(TimerAddedPerTick)
-                    if IsDead == 1 then
+                    if IsDead == false then
                         ClearPedTasks(PlayerPedId())
                         TimerDeath = TimerDeath + TimerAddedPerTick
                     else
@@ -134,11 +138,11 @@ AddEventHandler('esx:onPlayerDeath', function(data)
                 end
                 TimerDeath = 0
 
-                -- Wait(GlobalState.Timer * 60 * 1000)
+                Wait(GlobalState.Timer * 60 * 1000)
 
-                if IsDead == 1 then
+                if IsDead then
                     Respawn()
-                    IsDead = 0
+                    IsDead = false
                 end
             end
         end
@@ -155,14 +159,13 @@ CreateThread(function()
         else
             Wait(1000)
         end
-
     end
 end)
 
 CreateThread(function()
     while true do
         if IsPedDeadOrDying(PlayerPedId()) then
-            if IsPedDeadOrDying(PlayerPedId()) and IsDead == 1 then
+            if IsPedDeadOrDying(PlayerPedId()) and IsDead then
                 ClearPedTasksImmediately(PlayerPedId())
                 FreezeEntityPosition(PlayerPedId(), true)
             end
@@ -174,7 +177,7 @@ end)
 AddEventHandler('playerSpawned', function(spawn)
     ESX.TriggerServerCallback('nl_interactions:getDeathStatus', function(isDead)
 
-		if isDead and IsDead == 0 then
+		if isDead then
 			SetDisplay(true)
 			Wait(5000)
 			SetEntityHealth(ESX.PlayerData.ped, 0)
@@ -189,14 +192,14 @@ AddEventHandler('playerSpawned', function(spawn)
 					TriggerEvent("esx_status:set", "poop", 1000000)
 					TriggerEvent("esx_status:set", "hygiene", 1000000)
 					
-					TriggerEvent("esx_status:set", "fever", 0)
+					TriggerEvent("esx_status:set", "fever", 1000000)
 				end
 			end
 			SetDisplay(false)
 			StatusReload = false
-			IsDead = 0
-			if IsDead == 1 then
-				IsDead = 0
+			IsDead = false
+			if IsDead then
+				IsDead = false
 			end
 
 			TriggerServerEvent('nl_interactions:setDeathStatus', false)
@@ -906,14 +909,14 @@ AddEventHandler('nl_interactions:analysePulsePlayerEMS', function (data, player)
 
 		TaskPlayAnim(cache.ped,"amb@code_human_wander_clipboard@male@base","static",8.0, 8.0, -1, 49, 1, 0, 0, 0)
 
-		local coords = GetEntityCoords(cache.ped)
-		local prop = CreateObject(GetHashKey("p_cs_clipboard"), coords.x, coords.y, coords.z, true, true, true)
-
-		AttachEntityToEntity(prop, cache.ped, GetPedBoneIndex(cache.ped, 18905), 0.2, 0.1, 0.05, -130.0, -45.0, 0.0, true, true, false, false, 1, true)
-		Wait(3000)
-
-		ClearPedTasks(cache.ped)
-		DeleteObject(prop)
+        local coords = GetEntityCoords(cache.ped)
+        local prop = CreateObject(GetHashKey("p_cs_clipboard"), coords.x, coords.y, coords.z, true, true, true)
+    
+        AttachEntityToEntity(prop, cache.ped, GetPedBoneIndex(cache.ped, 18905), 0.2, 0.1, 0.05, -130.0, -45.0, 0.0, true, true, false, false, 1, true)
+        Wait(3000)
+    
+        ClearPedTasks(cache.ped)
+        DeleteObject(prop)
 
 	else
 		notify('error', locale('no_player_nearby') .. TypeKilledPlayer, 8000, 'EMS')
@@ -1006,7 +1009,7 @@ CreateThread(function()
 	SetBlipSprite(EmsPsy, config.blipsPsy.sprite)
 	SetBlipDisplay(EmsPsy, config.blipsPsy.display)
 	SetBlipScale(EmsPsy, config.blipsPsy.scale)
-	SetBlipColour(EmsPsy, config.clipsPsy.colour)
+	SetBlipColour(EmsPsy, config.blipsPsy.colour)
 	SetBlipAsShortRange(EmsPsy, true)
 	BeginTextCommandSetBlipName("STRING")
 	AddTextComponentString(config.blipsPsy.title)

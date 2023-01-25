@@ -197,7 +197,7 @@ exports['qtarget']:Player({
             end,
             action = function(entity)
             -- INSERT REVIVE
-            --exports['esx_ambulancejob']:revivePlayer(NetworkGetPlayerIndexFromPed(entity))
+            --exports['nl_interactions']:revivePlayer(NetworkGetPlayerIndexFromPed(entity))
             end
         },
         {
@@ -293,7 +293,7 @@ exports['qtarget']:Player({
                 end
 
             end,
-            event = "nl_interactions:AnalysePlayerEMS",
+            event = "nl_interactions:analysePlayerEMS",
         },
         {
             icon = 'fas fa-diagnoses',

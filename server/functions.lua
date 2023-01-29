@@ -23,7 +23,7 @@ function SendToDiscordWithSpecialURL(name,message,color,url)
 end
 
 -- [[ Register item ]]--
-ESX.RegisterUsableItem('wheelchairitem', function(playerId)
+ESX.RegisterUsableItem('wheelchair', function(playerId)
 
     local xPlayer = ESX.GetPlayerFromId(playerId)
 	local count = exports.ox_inventory:Search(xPlayer.source, 'count', 'wheelchair')
